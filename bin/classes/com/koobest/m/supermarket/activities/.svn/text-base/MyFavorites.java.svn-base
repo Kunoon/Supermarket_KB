@@ -1,0 +1,408 @@
+package com.koobest.m.supermarket.activities;
+
+import java.util.ArrayList;
+
+import com.koobest.m.supermarket.activities.quotehandler.EditQuote;
+import com.koobest.m.supermarket.constant.Constants;
+import com.koobest.m.supermarket.contentprovider.PROVIDER_NAME;
+import com.koobest.m.supermarket.database.NAME;
+import com.koobest.m.supermarket.toolkits.aboutprice.GetProductPrice;
+
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.ListView;
+
+public class MyFavorites extends Activity {
+
+	private ListView lv;
+	private static ArrayList<String> productNameArray;
+	private static ArrayList<CheckBox> checkBoxArray;
+	private static ArrayList<Integer> productIdArray;
+	//private static boolean hasProduct = false;
+	// lv_adapter;
+	Handler mHandler = null;
+	final int TURN_TO_DISPALY_PRODUCT = 0;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.my_favorite_page);
+		lv = (ListView) findViewById(R.id.lv);
+		checkBoxArray = new ArrayList<CheckBox>();
+		mHandler = new Handler() {
+			public void handleMessage(Message msg) {
+				switch (msg.what) {
+				case TURN_TO_DISPALY_PRODUCT:
+					Intent intent = new Intent();
+					intent.setClass(getApplicationContext(),
+							DisplayProduct.class);
+					intent.putExtra("product_id", productIdArray.get(msg
+							.getData().getInt("position")));
+					startActivity(intent);
+//					finish();
+				}
+			}
+		};
+		final MyAdapter lv_adapter = new MyAdapter(getApplicationContext(), Constants.getCustomerId());
+		setListViewAdapter(lv_adapter);
+
+		/**
+		 * the Button of Delete on Click Event. use SupermarketService to delete
+		 * the products we have checked from the local database used to store
+		 * our favorites
+		 * */
+		findViewById(R.id.delete_myfavor).setOnClickListener(
+				new OnClickListener() {
+
+					public void onClick(View v) {
+						lv.setEnabled(false);
+						ContentResolver cr = getContentResolver();
+						Cursor c = cr.query(PROVIDER_NAME.WISHLIST_CONTENT_URI,
+								new String[] { PROVIDER_NAME.WISHLIST_ID },
+								PROVIDER_NAME.CUSTOMER_ID + "=\"" + Constants.getCustomerId()
+										+ "\"", null, null);
+						if (c.moveToFirst()) {
+							String wishlist_id = c.getString(0);
+							c.close();
+							for (int i = checkBoxArray.size() - 1; i >= 0; i--) {
+								if (checkBoxArray.get(i).isChecked()) {
+									String selection = PROVIDER_NAME.PRODUCT_ID
+											+ "=" + productIdArray.get(i)
+											+ " and "
+											+ PROVIDER_NAME.WISHLIST_ID + "="
+											+ wishlist_id;
+									cr.delete(PROVIDER_NAME.WISHILST_PRODUCT_CONTENT_URI,
+													selection, null);
+									productIdArray.remove(i);
+									productNameArray.remove(i);
+									checkBoxArray.remove(i);
+								}
+							}
+							checkBoxArray.trimToSize();
+							productIdArray.trimToSize();
+							productNameArray.trimToSize();
+							lv_adapter.updateAdapter(productNameArray.size());
+							setListViewAdapter(lv_adapter);
+						}
+						if (!c.isClosed())
+							c.close();
+						lv.setEnabled(true);
+					}
+				});
+
+		/**
+		 * the Button of Add to quote on Click Event. use SupermarketSevice to
+		 * add the product to our local database used to store our quotes. Then
+		 * turn to
+		 * */
+		findViewById(R.id.add_to_quote).setOnClickListener(
+				new OnClickListener() {
+
+					public void onClick(View v) {
+						if (lv_adapter.getCount() != 0) {
+							lv.setEnabled(false);
+							ContentValues values = new ContentValues();
+							ContentResolver contentResolver = getBaseContext()
+									.getContentResolver();
+							Cursor cursor = contentResolver.query(
+									PROVIDER_NAME.QUOTE_CONTENT_URI,
+									new String[]{PROVIDER_NAME.QUOTE_ID,PROVIDER_NAME.VOLUME,
+									PROVIDER_NAME.WEIGHT},
+									PROVIDER_NAME.CUSTOMER_ID + "="
+											+ Constants.getCustomerId(), null, null);
+							if (cursor.getCount() == 0) {
+								values = new ContentValues();
+								values.put(PROVIDER_NAME.CUSTOMER_ID,
+												Constants.getCustomerId());
+								values.put(PROVIDER_NAME.VOLUME, 0);
+								values.put(PROVIDER_NAME.WEIGHT, 0);
+								values.put(PROVIDER_NAME.BILLING_ADDRESS_ID, -1);
+								values.put(PROVIDER_NAME.SHIPPING_ADDRESS_ID, -1);
+								values.put(PROVIDER_NAME.CONTAINER_CLASS_ID, 1);
+//								values.put(PROVIDER_NAME.PAYMENT_ID, "null");
+								values.put(PROVIDER_NAME.ORDER_ID,-1);
+								Log.e("custom_id",values.getAsString(PROVIDER_NAME.CUSTOMER_ID));
+								//values.put(PROVIDER_NAME.STATUS,"prepare_to_quote");
+								getContentResolver().insert(PROVIDER_NAME.QUOTE_CONTENT_URI,values);
+								values.clear();
+								cursor.requery();
+							}
+							cursor.moveToFirst();
+							int quote_id = cursor.getInt(0);
+                            double totalVolume=cursor.getDouble(1),totalWeight=cursor.getDouble(2);
+							cursor.close();
+							Cursor c = null;
+							CheckBox cb;
+							int max = checkBoxArray.size();
+							if (max > 0)
+								for (int i = 0; i < max; i++) {
+									cb = checkBoxArray.get(i);
+									if (cb.isChecked()) {
+										c = contentResolver
+												.query(PROVIDER_NAME.QUOTE_PRODUCT_CONTENT_URI,
+														new String[] { PROVIDER_NAME.QUOTE_PRODUCT_ID },
+														PROVIDER_NAME.PRODUCT_ID+ "=" + productIdArray.get(i)
+														+ " and " + PROVIDER_NAME.QUOTE_ID + "=" + quote_id,
+														null, null);
+										if (c.getCount() == 0) {
+											c.close();
+											//insert new product to quote
+											cursor = contentResolver.query(PROVIDER_NAME.PRODUCT_CONTENT_URI,
+															new String[] { PROVIDER_NAME.MINQTY,PROVIDER_NAME.VOLUME,
+															PROVIDER_NAME.WEIGHT},
+															PROVIDER_NAME.PRODUCT_ID+ "="+ productIdArray.get(i),
+															null, null);
+											cursor.moveToFirst();
+											int qty = cursor.getInt(0);
+											totalVolume+=cursor.getDouble(1)*qty;
+											totalWeight+=cursor.getDouble(2)*qty;
+											cursor.close();
+											values.put(PROVIDER_NAME.QTY, qty);
+											values.put(PROVIDER_NAME.QUOTE_ID,quote_id);
+											values.put(PROVIDER_NAME.PRODUCT_ID,productIdArray.get(i));
+											values.put(PROVIDER_NAME.PRODUCT_NAME,
+													productNameArray.get(i));
+//								        	values.put(PROVIDER_NAME.PRICE,GetProductPrice.getPriceInBaseCurrency(getApplicationContext(), productIdArray.get(i), qty));
+								        	cursor.close();
+											getContentResolver().insert(
+													PROVIDER_NAME.QUOTE_PRODUCT_CONTENT_URI,values);
+											values.clear();
+											//update quote total params
+											values.put(PROVIDER_NAME.VOLUME, totalVolume);
+											values.put(PROVIDER_NAME.WEIGHT, totalWeight);
+											getContentResolver().update(PROVIDER_NAME.QUOTE_CONTENT_URI, values,
+													PROVIDER_NAME.QUOTE_ID+"="+quote_id, null);
+											values.clear();
+										} else {
+											c.close();
+										}
+									}
+								}
+						}
+						lv.setEnabled(true);
+						Intent intent = new Intent();
+						intent.setClass(getBaseContext(),
+								EditQuote.class);
+//						intent.putExtra(Constants.CLASS_NAME_KEY, "MyFavorites");
+						MyFavorites.this.startActivity(intent);
+//						finish();
+					}
+				});
+
+		/**
+		 * the Button of Back to Main onClick Event. finished this activity and
+		 * go back to the SupermarketMain Activity
+		 * */
+		findViewById(R.id.gen_btn_main).setOnClickListener(
+				new OnClickListener() {
+					public void onClick(View v) {
+						Intent intent = new Intent(getApplicationContext(), SupermarketMain.class);
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(intent);
+					}
+				});
+		findViewById(R.id.gen_btn_back).setOnClickListener(
+				new OnClickListener() {
+					public void onClick(View v) {
+//						String className = getIntent().getStringExtra(Constants.CLASS_NAME_KEY);
+//						if(className!=null){
+//							if(className.equalsIgnoreCase("EditQuote")){
+//								Intent intent = new Intent(getBaseContext(), EditQuote.class);
+//								intent.putExtra(NAME.QUOTE_ID, getIntent().getIntExtra(NAME.QUOTE_ID,-1));
+//								startActivity(intent);
+//							}
+//						}
+						finish();
+					}
+				});
+
+	}
+	
+	@Override
+	protected void onStart() {
+		findViewById(R.id.gen_background).setBackgroundDrawable(SupermarketMain.getBackGround(getApplicationContext()));
+		super.onStart();
+	}
+
+	private void setListViewAdapter(MyAdapter adapter) {
+		Log.v("adapter","count:"+adapter.getCount());
+		if (adapter.getCount() != 0) {
+			lv.setAdapter(adapter);
+		} else {
+			ArrayAdapter<String> array_adapter = new ArrayAdapter<String>(
+					getApplicationContext(), android.R.layout.test_list_item,
+					new String[] { getString(R.string.d_noproduct_tag) });
+			lv.setAdapter(array_adapter);
+		}
+	}
+
+	private static void addToCheckBoxList(CheckBox checkBox) {
+		checkBoxArray.add(checkBox);
+	};
+
+	private static CheckBox getCheckBoxInIndex(int index) {
+
+		return checkBoxArray.get(index);
+	}
+
+	private static void createProductIdArray(int capacity) {
+		productIdArray = new ArrayList<Integer>(capacity);
+	}
+
+	private static void addToProductIdArray(Integer id) {
+		productIdArray.add(id);
+	}
+
+	private static void createProductNameArray(int capacity) {
+		productNameArray = new ArrayList<String>(capacity);
+	}
+
+	private static void addToProductNameArray(String name) {
+		productNameArray.add(name);
+	}
+
+	private static String getItemProductName(int index) {
+		/*if(index>productNameArray.size()){
+			return "";
+		}*/
+		return productNameArray.get(index);
+	}
+
+	private class MyAdapter extends BaseAdapter {
+		private LayoutInflater mInflater;
+		private View view;
+		int wishlist_id;
+		int count=0;
+		int hadAddIndex = -1;
+
+		public MyAdapter(final Context context, final int custormer_id) {
+			mInflater = LayoutInflater.from(context);
+			try {
+				ContentResolver contentResolver = context.getContentResolver();
+				// get wishlist_id
+				Cursor c = contentResolver.query(
+						PROVIDER_NAME.WISHLIST_CONTENT_URI,
+						new String[] { PROVIDER_NAME.WISHLIST_ID },
+						PROVIDER_NAME.CUSTOMER_ID + "=" + custormer_id ,
+						null, null);
+				if (c.moveToFirst()) {
+					wishlist_id = c.getInt(0);
+					c.close();
+					c = contentResolver.query(
+							PROVIDER_NAME.WISHILST_PRODUCT_CONTENT_URI,
+							new String[] { PROVIDER_NAME.PRODUCT_ID },
+							PROVIDER_NAME.WISHLIST_ID + "=" + wishlist_id,
+							null, null);
+					count = c.getCount();
+
+					createProductIdArray(count);
+					createProductNameArray(count);
+					c.moveToFirst();
+					Cursor c_product;
+					//int j = c.getPosition();
+					int id;
+					do {
+						id = c.getInt(0);
+						addToProductIdArray(id);
+
+						// !!!!!!!!!!!!!!!!!!!!
+						// Log.e("project_id",new
+						// String().valueOf(product_id[j]));
+						// !!!!!!!!!!!!!!!!!!!!!!!!!!
+						c_product = contentResolver
+								.query(
+										PROVIDER_NAME.PRODUCT_CONTENT_URI,
+										new String[] { PROVIDER_NAME.PRODUCT_NAME },
+										PROVIDER_NAME.PRODUCT_ID + "=" + id,
+										null, null);
+						c_product.moveToFirst();
+						addToProductNameArray(c_product.getString(0));
+						c_product.close();
+						// !!!!!!!!!!!!!!!!!!
+						// Log.e("product_name",c_product.getString(0) );
+						// !!!!!!!!!!!!!!!!!!!!!
+					} while (c.moveToNext());
+					if (!c_product.isClosed())
+						c_product.close();
+					c.close();
+				}
+				if (!c.isClosed())
+					c.close();
+			} catch (CursorIndexOutOfBoundsException e) {
+			}
+
+		}
+
+		public void updateAdapter(int count) {
+			this.count = count;
+		}
+
+		public int getCount() {
+			return count;
+		}
+
+		public Object getItem(int arg0) {
+			return arg0;
+		}
+
+		public long getItemId(int arg0) {
+			return arg0;
+		}
+
+		public View getView(final int arg0, View convertView, ViewGroup arg2) {
+
+			if (arg0 > hadAddIndex) {
+				view = mInflater.inflate(R.layout.of_myfavorites, null);
+				holder = (CheckBox) view.findViewById(R.id.cb_myfavorites);
+				hadAddIndex++;
+				holder.setTag(view);
+				addToCheckBoxList(holder);
+			} else {
+				holder = getCheckBoxInIndex(arg0);
+			}
+
+			holder.setText(getItemProductName(arg0));
+			holder.setOnLongClickListener(new OnLongClickListener() {
+
+				public boolean onLongClick(View v) {
+					Message msg = new Message();
+					msg.what = TURN_TO_DISPALY_PRODUCT;
+					Bundle bundle = new Bundle();
+					bundle.putInt("position", arg0);
+					msg.setData(bundle);
+					mHandler.sendMessage(msg);
+					return false;
+				}
+			});
+			holder.setId(arg0);
+			return (View) holder.getTag();
+		}
+
+		CheckBox holder;
+	}
+
+	public void onConfigurationChanged(Configuration newConfig) {
+		try {
+			super.onConfigurationChanged(newConfig);
+		} catch (Exception ex) {
+		}
+	}
+}

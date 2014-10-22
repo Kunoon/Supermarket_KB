@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout
+ xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_width="fill_parent" 
+ android:layout_height="fill_parent"
+ android:orientation="vertical"
+>
+	 <TextView
+	     android:layout_width="wrap_content"
+	     android:layout_height="wrap_content"
+	     android:text="@string/search_product_local_tag"
+	     android:textSize="@dimen/key_word"
+	     android:layout_marginLeft="10sp"
+	     android:layout_marginTop="10sp"
+	     android:textColor="@color/key_word_color"/>
+    <LinearLayout 
+	    android:id="@+id/linearLayout1" 
+	    android:layout_width="fill_parent" 
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical">
+        <ListView 
+	        android:id="@+id/productlist_search"
+	        android:layout_width="match_parent" 
+	        android:layout_height="match_parent"
+	        android:cacheColorHint="#00000000"
+	        android:listSelector="@drawable/list_selector"
+	        android:layout_marginLeft="10sp"
+	        android:layout_marginRight="10sp"
+          	android:divider="@color/list_line"    
+		 	android:dividerHeight="0.5dp"/>
+    </LinearLayout>
+</LinearLayout>

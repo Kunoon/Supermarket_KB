@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+ <container_list>
+ <container>
+  <container_id>1</container_id> 
+  <name>20' Dry Container</name> 
+  <length>5.898</length> 
+  <width>2.352</width> 
+  <height>2.385</height> 
+ <length_class>
+  <id>4</id> 
+  <unit>m</unit> 
+  </length_class>
+  <max_load_weight>28080.00</max_load_weight> 
+ <weight_class>
+  <id>1</id> 
+  <unit>kg</unit> 
+  </weight_class>
+</container>
+<container>
+  <container_id>2</container_id> 
+  <name>40' Dry Container</name> 
+  <length>12.032</length> 
+  <width>2.352</width> 
+  <height>2.385</height> 
+ <length_class>
+  <id>4</id> 
+  <unit>m</unit> 
+  </length_class>
+  <max_load_weight>26480.00</max_load_weight> 
+ <weight_class>
+  <id>1</id> 
+  <unit>kg</unit> 
+  </weight_class>
+</container>
+<container>
+  <container_id>3</container_id> 
+  <name>40' Hi-Cube Dry Container</name> 
+  <length>12.032</length> 
+  <width>2.352</width> 
+  <height>2.690</height> 
+ <length_class>
+  <id>4</id> 
+  <unit>m</unit> 
+  </length_class>
+  <max_load_weight>26280.00</max_load_weight> 
+ <weight_class>
+  <id>1</id> 
+  <unit>kg</unit> 
+  </weight_class>
+  </container>
+</container_list>
+

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"  
+          android:id="@+id/rowtv1" 
+          android:layout_width="fill_parent"  
+          android:layout_height="@dimen/list_height"
+          android:textSize="@dimen/list_word"
+          android:gravity="bottom"
+          android:singleLine="true"
+          android:ellipsize="end"
+          android:paddingBottom="8sp"
+          android:textColor="@color/text_color"  
+          android:paddingLeft="12dip" 
+          android:paddingRight="12dip">  
+</TextView>  

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.koobest.m.supermarket.activities"
+      android:versionCode="1"
+      android:versionName="1.0" 
+      >
+    <uses-sdk android:minSdkVersion="8" />
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <!-- Authenticator -->
+    <uses-permission 
+        android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission 
+        android:name="android.permission.READ_CONTACTS" />
+    <uses-permission 
+        android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission 
+        android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission 
+        android:name="android.permission.WRITE_SYNC_SETTINGS" />  
+    <uses-permission
+        android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission
+        android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission
+        android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission
+        android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <!-- Supermarket Express -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission> 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission> 
+    <application android:icon="@drawable/icon" android:name="com.koobest.m.supermarket.application.MarketApplication"
+                 android:theme="@style/Theme.noBackground"
+                 android:label="@string/app_name"
+                  >
+        <provider android:name="com.koobest.m.supermarket.contentprovider.SupermarketContentProvider"
+              android:authorities="com.koobest.m.supermarket.contentprovider"></provider>
+        <provider android:name="com.koobest.m.supermarket.contentprovider.OrdersSyncContentProvider" 
+	          android:authorities="@string/authority_orders"  android:label="Orders Status" android:syncable="true"/>
+	    <provider android:name="com.koobest.m.supermarket.contentprovider.PriceSyncContentProvider" 
+	          android:authorities="@string/authority_price"  android:label="Product Price" android:syncable="true"/>
+        <provider android:name="com.koobest.m.sync.contentprovider.ConstantsSyncContentProvider" 
+	          android:authorities="@string/authority_constants"  android:label="Constants" android:syncable="true"/>  
+        <provider android:name="com.koobest.m.sync.contentprovider.CustomerSyncContentProvider" 
+	          android:authorities="@string/authority_customer"  android:label="Customer Profile" android:syncable="true"/>
+	    <provider android:name="com.koobest.m.sync.contentprovider.CurrencySyncContentProvider" 
+	          android:authorities="@string/authority_currency"  android:label="Currency" android:syncable="true"/>    
+	          
+	    <service
+            android:name="com.koobest.m.syncadapter.CustomerSyncService"
+            android:exported="true" android:process=":curstomer">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />   
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/customer_syncadapter" />
+        </service>
+        <service
+            android:name="com.koobest.m.syncadapter.CurrencySyncService"
+            android:exported="true" android:process=":currency">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/currency_syncadapter" />      
+        </service>
+        <service
+            android:name="com.koobest.m.syncadapter.ConstantsSyncService"
+            android:exported="true" android:process=":constants">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/constants_syncadapter" />      
+        </service>      
+        <service
+            android:name="com.koobest.m.supermarket.sync.OrdersSyncService"
+            android:exported="true" android:process=":orders">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>     
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/orders_syncadapter" />
+        </service> 
+        <service
+            android:name="com.koobest.m.supermarket.sync.PriceSyncService"
+            android:exported="true" android:process=":price">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>     
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/price_syncadapter" />
+        </service> 
+        <!-- Supermarket Express -->
+        <activity android:label="@string/app_name" android:name=".Loading" android:screenOrientation="portrait"
+             android:configChanges="orientation|keyboardHidden"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:label="@string/app_name" android:name=".SupermarketMain" android:screenOrientation="portrait"
+        android:configChanges="orientation|keyboardHidden" android:launchMode="singleTop"
+        />
+        <activity android:name=".productsearch.SearchProductTab" android:screenOrientation="portrait"
+        android:configChanges="orientation|keyboardHidden"
+        android:noHistory="false"/>
+        <activity android:name=".productsearch.SearchProduct" android:screenOrientation="portrait"
+        android:configChanges="orientation|keyboardHidden"
+        android:noHistory="false"/>
+        <activity android:name=".productsearch.AdvancedSearchProduct" android:screenOrientation="portrait"
+        android:configChanges="orientation|keyboardHidden"
+        android:noHistory="false"/>
+        <activity android:name=".productsearch.LocalSearchProduct" android:screenOrientation="portrait"
+        android:configChanges="orientation|keyboardHidden"
+        android:noHistory="false"/>
+        <activity android:name="DisplayProduct"  android:windowSoftInputMode="adjustPan" android:screenOrientation="portrait"
+        android:configChanges="orientation|keyboardHidden"
+        android:noHistory="false"/>
+        <activity android:name="MyFavorites"
+        android:configChanges="orientation|keyboardHidden" android:screenOrientation="portrait"
+        android:noHistory="false"/> 
+        <!-- <activity android:name="PrepareQuote"  android:noHistory="false"
+        android:windowSoftInputMode="adjustPan" ></activity> -->
+        <activity android:name=".quotehandler.EditQuote"
+        android:configChanges="orientation|keyboardHidden" android:screenOrientation="portrait"
+        android:noHistory="false"/>
+        <activity android:name=".quotehandler.ProductPageHandler"
+        android:configChanges="orientation|keyboardHidden" android:screenOrientation="portrait"
+        android:noHistory="false"/>
+        <activity android:name=".quotehandler.SummaryOfCreate"
+        android:configChanges="orientation|keyboardHidden" android:screenOrientation="portrait"
+        android:noHistory="false"/>
+        <activity android:name=".quotehandler.SummaryOfUpdate"
+        android:configChanges="orientation|keyboardHidden" android:screenOrientation="portrait"
+        android:noHistory="false"/>
+        <activity android:name="MyQuotesAndOrders" android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustPan"  android:noHistory="false" />
+        <activity android:name="QuoteConfirm" 
+        android:configChanges="orientation|keyboardHidden" android:screenOrientation="portrait"
+        android:noHistory="false"/>
+        <activity android:name=".PrewiredContainerList" android:screenOrientation="portrait"
+        android:configChanges="orientation|keyboardHidden"
+        android:noHistory="false"/> 
+        <activity android:name=".PrewiredContainerDetail" android:screenOrientation="portrait"
+        android:configChanges="orientation|keyboardHidden"
+        android:noHistory="false"/> 
+        <activity android:name=".setting.Setting" android:screenOrientation="portrait"/>
+        <receiver android:name=".setting.SettingBroadcastReceiver">
+            <intent-filter> 
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        <!-- Authenticator -->
+        <activity android:name="com.koobest.m.authenticate.activities.AuthenticatorActivity" android:screenOrientation="portrait"
+                  android:label="@string/app_name">
+                  <intent-filter>
+                  <action android:name="koobest.intent.action.AUTHENTICATE" />
+                  <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <service
+            android:name="com.koobest.m.authenticate.service.AccountsService"
+            android:exported="true" android=":account">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+                 
+        <!-- AccountSetting -->
+        <activity android:name="com.koobest.m.accountsetting.FrequenciesSettingActivity" android:screenOrientation="portrait"
+                  android:label="Setting Period" android:theme="@style/Theme.SettingPeriod">
+            <intent-filter>
+                  <action android:name="koobest.m.accountsetting.ACCOUNT_SETUP" />
+                  <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
+      
+</manifest>

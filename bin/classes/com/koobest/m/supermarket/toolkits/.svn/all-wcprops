@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/kb_express/!svn/ver/169/trunk/SupermarketExpress/src/com/koobest/m/supermarket/toolkits
+END
+DefaultHandlerPayment.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/kb_express/!svn/ver/57/trunk/SupermarketExpress/src/com/koobest/m/supermarket/toolkits/DefaultHandlerPayment.java
+END
+DefaultHandlerOrderDetail.java
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/svn/kb_express/!svn/ver/169/trunk/SupermarketExpress/src/com/koobest/m/supermarket/toolkits/DefaultHandlerOrderDetail.java
+END
+DefaultHandlerPayTerm.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/kb_express/!svn/ver/44/trunk/SupermarketExpress/src/com/koobest/m/supermarket/toolkits/DefaultHandlerPayTerm.java
+END
+DefaultHandlerProductsPrice.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/kb_express/!svn/ver/155/trunk/SupermarketExpress/src/com/koobest/m/supermarket/toolkits/DefaultHandlerProductsPrice.java
+END
+DefaultHandlerFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/svn/kb_express/!svn/ver/169/trunk/SupermarketExpress/src/com/koobest/m/supermarket/toolkits/DefaultHandlerFactory.java
+END

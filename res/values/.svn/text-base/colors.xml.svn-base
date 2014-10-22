@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="font_blue">#405D94</color>
+    <color name="font_black">#000000</color>   
+    <color name="font_grey">#706F6C</color> 
+    <color name="line_grey">#706F6C</color>
+    
+    <!-- list_line -->
+    <color name="list_line">#dcdcdc</color>
+    <!-- button -->
+    <color name="btn_color">#ffffff</color>  
+    
+    <color name="keyboard_color">#300260</color>
+    
+    <color name="exit_dialog_text_color">#383F7F</color>
+    
+    <!-- word -->
+    <color name="menu_color">#000000</color>
+    <color name="title_color">#ffffff</color> 
+    <color name="key_word_color">#405D94</color> 
+    <color name="text_color">#000000</color> 
+    <color name="spinner_word_color">#515151</color> 
+    <color name="warm_word_color">#515151</color> 
+</resources>

@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/kb_express/!svn/ver/233/trunk/SupermarketExpress/src/com/koobest/m/supermarket/activities/quotehandler
+END
+MyConstants.java
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/kb_express/!svn/ver/227/trunk/SupermarketExpress/src/com/koobest/m/supermarket/activities/quotehandler/MyConstants.java
+END
+EditQuote.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/kb_express/!svn/ver/227/trunk/SupermarketExpress/src/com/koobest/m/supermarket/activities/quotehandler/EditQuote.java
+END
+SummaryOfUpdate.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/kb_express/!svn/ver/227/trunk/SupermarketExpress/src/com/koobest/m/supermarket/activities/quotehandler/SummaryOfUpdate.java
+END
+SummaryOfCreate.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/kb_express/!svn/ver/227/trunk/SupermarketExpress/src/com/koobest/m/supermarket/activities/quotehandler/SummaryOfCreate.java
+END
+SummaryPageHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/kb_express/!svn/ver/227/trunk/SupermarketExpress/src/com/koobest/m/supermarket/activities/quotehandler/SummaryPageHandler.java
+END
+QtyOrPriceAdjustHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/kb_express/!svn/ver/233/trunk/SupermarketExpress/src/com/koobest/m/supermarket/activities/quotehandler/QtyOrPriceAdjustHandler.java
+END
+ProductPageHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/svn/kb_express/!svn/ver/227/trunk/SupermarketExpress/src/com/koobest/m/supermarket/activities/quotehandler/ProductPageHandler.java
+END
+OverrideWarnDlg.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/kb_express/!svn/ver/16/trunk/SupermarketExpress/src/com/koobest/m/supermarket/activities/quotehandler/OverrideWarnDlg.java
+END

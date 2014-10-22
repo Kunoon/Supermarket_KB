@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<brand_list>
+    <brand>
+    <brand_id>8</brand_id>
+    <name>阿莎力</name>
+    <sort_order>1</sort_order>
+  </brand>
+    <brand>
+
+    <brand_id>1</brand_id>
+    <name>蜀香</name>
+    <sort_order>2</sort_order>
+  </brand>
+    <brand>
+    <brand_id>2</brand_id>
+    <name>元丰隆</name>
+
+    <sort_order>3</sort_order>
+  </brand>
+    <brand>
+    <brand_id>5</brand_id>
+    <name>亨氏</name>
+    <sort_order>4</sort_order>
+  </brand>
+
+    <brand>
+    <brand_id>6</brand_id>
+    <name>今麦郎</name>
+    <sort_order>5</sort_order>
+  </brand>
+    <brand>
+    <brand_id>9</brand_id>
+
+    <name>虎王</name>
+    <sort_order>6</sort_order>
+  </brand>
+    <brand>
+    <brand_id>7</brand_id>
+    <name>鱼泉</name>
+    <sort_order>7</sort_order>
+
+  </brand>
+    <brand>
+    <brand_id>4</brand_id>
+    <name>洽洽</name>
+    <sort_order>8</sort_order>
+  </brand>
+    <brand>
+
+    <brand_id>10</brand_id>
+    <name>群星</name>
+    <sort_order>9</sort_order>
+  </brand>
+    <brand>
+    <brand_id>11</brand_id>
+    <name>宏源</name>
+
+    <sort_order>10</sort_order>
+  </brand>
+    <brand>
+    <brand_id>12</brand_id>
+    <name>三丰</name>
+    <sort_order>11</sort_order>
+  </brand>
+
+    <brand>
+    <brand_id>13</brand_id>
+    <name>泮塘</name>
+    <sort_order>12</sort_order>
+  </brand>
+    <brand>
+    <brand_id>14</brand_id>
+
+    <name>熊猫</name>
+    <sort_order>13</sort_order>
+  </brand>
+    <brand>
+    <brand_id>15</brand_id>
+    <name>珠江101</name>
+    <sort_order>14</sort_order>
+
+  </brand>
+    <brand>
+    <brand_id>16</brand_id>
+    <name>通字</name>
+    <sort_order>15</sort_order>
+  </brand>
+    <brand>
+
+    <brand_id>17</brand_id>
+    <name>亿贝</name>
+    <sort_order>16</sort_order>
+  </brand>
+    <brand>
+    <brand_id>18</brand_id>
+    <name>春雨</name>
+
+    <sort_order>17</sort_order>
+  </brand>
+    <brand>
+    <brand_id>19</brand_id>
+    <name>中华老字号</name>
+    <sort_order>18</sort_order>
+  </brand>
+
+    <brand>
+    <brand_id>53</brand_id>
+    <name>PUROLIVA</name>
+    <sort_order>51</sort_order>
+  </brand>
+    <brand>
+    <brand_id>54</brand_id>
+
+    <name>DOVE</name>
+    <sort_order>52</sort_order>
+  </brand>
+    <brand>
+    <brand_id>55</brand_id>
+    <name>VIM</name>
+    <sort_order>53</sort_order>
+
+  </brand>
+    <brand>
+    <brand_id>56</brand_id>
+    <name>AXE</name>
+    <sort_order>54</sort_order>
+  </brand>
+    <brand>
+
+    <brand_id>57</brand_id>
+    <name>VASELINE</name>
+    <sort_order>55</sort_order>
+  </brand>
+    <brand>
+    <brand_id>51</brand_id>
+    <name>HI-DRI</name>
+
+    <sort_order>56</sort_order>
+  </brand>
+    <brand>
+    <brand_id>52</brand_id>
+    <name>Royale</name>
+    <sort_order>57</sort_order>
+  </brand>
+
+    <brand>
+    <brand_id>9999</brand_id>
+    <name>未知</name>
+    <sort_order>999</sort_order>
+  </brand>
+  </brand_list>

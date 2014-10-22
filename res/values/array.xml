@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <string-array name="period_currency">
+      <item>two hours</item>
+      <item>four hours</item>
+      <item>half of the day</item>
+      <item>twelve hours</item>
+      <item>a day</item>
+   </string-array>
+   <string-array name="period_currency_value">
+      <!-- unit hour -->
+      <item>2</item>
+      <item>4</item>
+      <item>6</item>
+      <item>12</item>
+      <item>24</item>
+   </string-array>
+   <string-array name="period_orderlist">
+      <item>one hour</item>
+      <item>two hours</item>
+      <item>four hours</item>
+      <item>half of the day</item>
+      <item>twelve hours</item>
+      <item>a day</item>
+   </string-array>
+   <string-array name="period_orderlist_value">
+      <!-- unit hour -->
+   	  <item>1</item>
+      <item>2</item>
+      <item>4</item>
+      <item>6</item>
+      <item>12</item>
+      <item>24</item>
+   </string-array>
+   <string-array name="cache_pro_detail">
+      <item>three days</item>
+      <item>five days</item>
+      <item>a week</item>
+   </string-array>
+   <string-array name="cache_pro_detail_value">
+      <!-- unit day -->
+      <item>3</item>
+      <item>5</item>
+      <item>7</item>
+   </string-array>
+</resources>

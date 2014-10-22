@@ -1,0 +1,139 @@
+8
+
+dir
+239
+https://bestiot.com/svn/kb_express/trunk/SupermarketExpress/src/com/koobest/m/supermarket/activities
+https://bestiot.com/svn/kb_express
+
+
+
+2011-10-28T10:58:17.360896Z
+238
+chenhf
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+92578701-8ade-423e-b8c1-4617cf097e39
+
+PrewiredContainerList.java
+file
+
+
+
+
+2011-10-25T01:09:20.179952Z
+b118ee83308e7cde3730412dee894a7b
+2011-10-24T03:03:31.053821Z
+205
+chenhf
+
+dlg
+dir
+
+productsearch
+dir
+
+DisplayProduct.java
+file
+
+
+
+
+2011-10-25T01:09:20.195552Z
+89b6cc11fc3421df73fbff6b95d621d8
+2011-10-24T03:03:31.053821Z
+205
+chenhf
+
+PrewiredContainerDetail.java
+file
+
+
+
+
+2011-10-25T01:09:20.195552Z
+8905f02e186ade4b1158b3c4db8a0207
+2011-10-24T03:03:31.053821Z
+205
+chenhf
+
+SupermarketMain.java
+file
+
+
+
+
+2011-10-25T01:09:20.195552Z
+8ccb43922a20927e353192a962cae86e
+2011-10-24T03:03:31.053821Z
+205
+chenhf
+
+MyFavorites.java
+file
+
+
+
+
+2011-10-25T01:09:20.195552Z
+7fbfba7656c67061d1e678295bb3ef5f
+2011-10-24T03:03:31.053821Z
+205
+chenhf
+
+MyQuotesAndOrders.java
+file
+
+
+
+
+2011-10-25T01:09:20.211152Z
+106c7f1b91765886b9f822ed2780bdf0
+2011-10-24T03:03:31.053821Z
+205
+chenhf
+
+quotehandler
+dir
+
+utilities
+dir
+
+QuoteConfirm.java
+file
+
+
+
+
+2011-10-25T01:09:20.211152Z
+c4b5b02484fc0def54c4427e3374bd57
+2011-10-24T03:03:31.053821Z
+205
+chenhf
+
+setting
+dir
+
+Loading.java
+file
+
+
+
+
+2011-10-24T01:24:50.290270Z
+4f6a5006fb4daf1dbc6f4a4e4c2dc8db
+2011-10-22T15:09:49.916250Z
+203
+chenhf
+

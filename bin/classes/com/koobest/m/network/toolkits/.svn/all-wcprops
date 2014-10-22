@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/kb_express/!svn/ver/140/trunk/SupermarketExpress/src/com/koobest/m/network/toolkits
+END
+HttpClientFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/src/com/koobest/m/network/toolkits/HttpClientFactory.java
+END
+MySSLSocketFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/src/com/koobest/m/network/toolkits/MySSLSocketFactory.java
+END
+NetWork.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/kb_express/!svn/ver/140/trunk/SupermarketExpress/src/com/koobest/m/network/toolkits/NetWork.java
+END
+ResponseException.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/src/com/koobest/m/network/toolkits/ResponseException.java
+END
+CommonNetworkUtilities.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/kb_express/!svn/ver/140/trunk/SupermarketExpress/src/com/koobest/m/network/toolkits/CommonNetworkUtilities.java
+END

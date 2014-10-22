@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<length_class_list>
+    <length_class>
+    <length_class_id>1</length_class_id>
+    <unit>cm</unit>
+    <title>Centimeter</title>
+    <value>1.00000000</value>
+  </length_class>
+    <length_class>
+    <length_class_id>2</length_class_id>
+    <unit>mm</unit>
+    <title>Millimeter</title>
+    <value>10.00000000</value>
+  </length_class>
+    <length_class>
+    <length_class_id>3</length_class_id>
+    <unit>in</unit>
+    <title>Inch</title>
+    <value>0.39370000</value>
+  </length_class>
+    <length_class>
+    <length_class_id>4</length_class_id>
+    <unit>m</unit>
+    <title>Meter</title>
+    <value>0.01000000</value>
+  </length_class>
+</length_class_list>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:weightSum="10"
+	android:gravity="bottom"
+	android:layout_gravity="bottom"
+	android:id="@+id/loading"
+	android:layout_width="fill_parent"
+	android:layout_height="match_parent">
+	<LinearLayout 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="100sp"
+		android:gravity="center_horizontal"
+		android:orientation="vertical">
+		<TextView
+	       android:text="@string/load_loading" 
+	       android:id="@+id/load_statu"
+	       android:layout_gravity="left"
+	       android:textColor="@color/text_color"
+	       android:layout_marginLeft="60sp"
+	       android:layout_width="wrap_content"
+	       android:layout_height="wrap_content"/>
+		<ProgressBar 
+			android:id="@+id/load_progress"
+			android:layout_width="200sp"
+			android:layout_height="2sp"
+			style="?android:attr/progressBarStyleHorizontal"
+			android:max="50"
+			android:progressDrawable="@drawable/progress_yellow"
+			android:layout_gravity="center_horizontal"/>
+	</LinearLayout>
+	<TextView
+		android:text="@string/load_company" 
+		android:textStyle="bold"
+		android:layout_gravity="right|bottom"
+		android:layout_marginRight="4sp"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"/>
+		
+	
+	<!-- 
+	<FrameLayout
+		android:layout_weight="6"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
+		<TextView 
+			android:text="@string/app_name"
+			android:id="@+id/textView1"
+			android:textSize="24sp"
+			android:layout_gravity="center"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+	</FrameLayout>
+ <FrameLayout
+   android:layout_marginBottom="2sp"
+   android:layout_width="200sp"
+   android:layout_height="wrap_content"
+   android:layout_gravity="center_horizontal">
+      <TextView
+       android:text="@string/a0_loading" 
+       android:id="@+id/load_statu"
+       android:layout_gravity="left"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"/>
+   </FrameLayout>
+<ProgressBar 
+android:id="@+id/load_progress"
+android:layout_width="200sp"
+android:layout_height="2sp"
+style="?android:attr/progressBarStyleHorizontal"
+android:max="50"
+android:progressDrawable="@drawable/progress_yellow"
+android:layout_gravity="center_horizontal"/>
+<FrameLayout
+	android:layout_weight="4"
+	android:layout_marginBottom="2sp"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content">
+		<FrameLayout
+			android:layout_marginBottom="2sp"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom">
+			<TextView
+				android:text="@string/a0_company" 
+				android:textStyle="bold"
+				android:layout_gravity="right"
+				android:layout_marginRight="4sp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"/>
+		</FrameLayout>     
+	</FrameLayout>
+ -->
+</LinearLayout>

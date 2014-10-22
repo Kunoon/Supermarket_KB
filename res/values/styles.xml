@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources  xmlns:android="http://schemas.android.com/apk/res/android">
+<style
+    name="Theme.noBackground"
+    parent="android:Theme">
+         <item name="android:windowBackground">@null</item>
+     	 <item name="android:windowContentOverlay">@null</item> 
+         <item name="android:windowNoTitle">true</item>
+</style>
+<style
+    name="Theme.background" 
+    parent="android:Theme">
+        <item name="android:background">@drawable/background</item>
+</style>
+
+<style
+    name="Theme.background_111" 
+    parent="android:Theme">
+        <item name="android:background">@drawable/loding_bg</item>
+</style>
+<style
+    name="Theme.dilogbackground" 
+    parent="android:Theme.Dialog">
+   <!-- <item name="android:windowNoTitle">true</item> --> 
+        <item name="android:windowFullscreen">false</item> 
+        <item name="android:background">@drawable/background</item>
+        <item name="android:textColor">#ff000000</item>
+        <item name="android:windowTitleStyle">@style/XWindowTitle</item>
+</style>
+<style name="XWindowTitle">  
+            <item name="android:shadowColor">#BB000000</item>  
+            <item name="android:shadowRadius">0</item>  
+</style>  
+<style name="TANCStyle" parent="@android:style/Theme.Dialog">
+    <item name="android:background">#dcdcdc</item>
+     <item name="android:windowNoTitle">true</item>
+</style>
+<style name="TitleStyle">
+    <item name="android:textAppearance">@style/TitleText</item>
+    <item name="android:gravity">center</item>
+</style>
+<style name="TitleText" parent="@android:style/TextAppearance.DialogWindowTitle">
+    <item name="android:textColor">@color/text_color</item>
+</style>
+                  
+        
+
+<style
+    name="Theme.SettingPeriod" 
+    parent="android:Theme.Dialog">
+    <item name="android:windowTitleStyle">@style/XWindowTitle</item>
+        <item name="android:textColor">#ff000000</item>
+        <item name="android:textSize">18sp</item>
+</style>
+
+<style name="WindowTitleBackground"
+       parent="android:Theme">
+      <item name="android:background">#66446677</item>
+</style>
+
+<style name="main_bage_button" parent="android:Widget.Button">
+    <item name="android:background">@drawable/rect_selector</item>
+    <item name="android:gravity">center</item>
+    <item name="android:textSize">16sp</item>
+</style>
+</resources>
+

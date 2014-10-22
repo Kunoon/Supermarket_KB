@@ -1,0 +1,107 @@
+package com.koobest.m.supermarket.activities.productsearch;
+
+import com.koobest.m.supermarket.activities.DisplayProduct;
+import com.koobest.m.supermarket.activities.R;
+import com.koobest.m.supermarket.activities.R.id;
+import com.koobest.m.supermarket.activities.R.layout;
+import com.koobest.m.supermarket.activities.R.string;
+import com.koobest.m.supermarket.contentprovider.PROVIDER_NAME;
+
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.database.Cursor;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
+
+public class LocalSearchProduct extends Activity{
+	final static String TAG="LocalSearchProduct";
+
+	private ListView lv_products;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.local_search_product_page);
+		lv_products = (ListView) findViewById(R.id.productlist_search);
+	    
+//	    findViewById(R.id.local_Search_back).setOnClickListener(
+//				new OnClickListener() {
+//
+//					public void onClick(View v) {
+//						finish();
+//					}
+//				});
+	}
+	
+	@Override
+	protected void onStart() {
+		new CreateProductListTask().execute();
+		super.onStart();
+	}
+	
+	class CreateProductListTask extends AsyncTask<Object, Integer, Bundle>{
+		private ArrayAdapter<String> mAdapter=null;
+
+		@Override
+		protected Bundle doInBackground(Object... arg0) {
+			ContentResolver resolver = getContentResolver();
+			Cursor cursor=resolver.query(PROVIDER_NAME.PRODUCT_CONTENT_URI, new String[]{
+					PROVIDER_NAME.PRODUCT_ID,PROVIDER_NAME.PRODUCT_NAME},null,null, null);
+			int count;
+			if((count=cursor.getCount())!=0){
+				int[] productId = new int[count];
+				String[] data= new String[count];
+				int i = 0;
+				while(cursor.moveToNext()){
+					productId[i]=cursor.getInt(0);
+				    data[i]=cursor.getString(1);
+				    i++;
+				}
+				cursor.close();
+				mAdapter=new ArrayAdapter<String>(getBaseContext(), R.layout.my_simple_list_item,data);
+				Bundle bundle = new Bundle();
+				bundle.putBoolean("result", true);
+				bundle.putIntArray("product_ids",productId);
+				return bundle;
+			}
+			cursor.close();
+			Bundle bundle = new Bundle();
+			bundle.putBoolean("result", false);
+			return bundle;
+		}
+		
+		protected void onPostExecute(final Bundle result) {
+			if(result.getBoolean("result",false)){
+				lv_products.setAdapter(mAdapter);
+				Log.e(TAG,"listcount"+lv_products.getCount());
+				lv_products.setOnItemClickListener(new OnItemClickListener() {
+
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int arg2, long arg3) {
+						Log.e(TAG,"item clicked");
+						Intent intent = new Intent();
+						intent.setClass(getApplicationContext(),
+								DisplayProduct.class);
+						Log.e(TAG,"productId:"+(result.getIntArray("product_ids"))[arg2]);
+						intent.putExtra("product_id", (result.getIntArray("product_ids"))[arg2]);
+						startActivity(intent);	
+//						finish();
+					}
+				});
+			}else{
+				final ArrayAdapter<String> array_adapter = new ArrayAdapter<String>(
+						getApplicationContext(),
+						android.R.layout.test_list_item,
+						new String[] { getString(R.string.b2_noproducts_tag) });
+				lv_products.setAdapter(array_adapter);
+			}
+		}
+	}
+}

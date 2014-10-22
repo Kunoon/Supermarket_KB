@@ -1,0 +1,467 @@
+/**
+	 * When you use this class, three method you should called except construct method.
+	 * The first:{initTotalMaxAttr(int weight,int volume)}to init the max value of the
+	 *          total attributes.
+	 * The second:{initTotalAttr(double volume,double weight,double price);} to init total 
+	 *          information of all the goods in the quote.
+	 * The third:{setProductView(int product_id,TextView name,TextView
+	 *			qty,TextView price,TextView totalPrice);} when you choose a new product 
+     *		    in your ListView you should call it.
+     * The last:{setOnProductChange(boolean isChange);}This method is worked with the second
+     *          one.If you want use it in a correct way,please see the detailed describe 
+     *          of it:)
+	 * @author Administrator
+	 */
+package com.koobest.m.supermarket.activities.quotehandler;
+
+import java.util.HashMap;
+
+import com.koobest.m.supermarket.activities.R;
+import com.koobest.m.supermarket.contentprovider.PROVIDER_NAME;
+import com.koobest.m.supermarket.database.NAME;
+import com.koobest.m.supermarket.toolkits.aboutprice.GetProductPrice;
+import com.koobest.m.supermarket.toolkits.ofcurrency.CurrencyNote;
+import com.koobest.widget.keyboard.MarketProductBoard;
+
+import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+class QtyOrPriceAdjustHandler {
+	//MaxValue
+	private int maxTotalWeight=0;
+	private int maxTotalVolume=0;
+	//used to init
+	private Context mContext;
+	private double mTotalPrice=0.0;
+	private double mTotalVolume=0.0;
+	private double mTotalWeight=0.0;
+	
+	//of only one product information
+	//limit values for only one product which is selected
+	private int maxQty;
+	private int minQty;	
+	private int mPreQty=0; 
+	private int mCurrentDiscountQty=-1;
+	private int mFutureDiscountQty;
+	private int mProduct_id;
+	private double mCurrentPrice;
+	private double mVolume;
+	private double mWeight;
+	
+	private ProductView productView;
+	private TotalView totalView;
+	private final CurrencyNote mCurrencyNote;
+	private Cursor cursor;
+	//private boolean isChangeByProgress=false;
+	private boolean isOnProductChange=false;
+	
+	private HashMap<String, Object> mAdapterItem;
+	private MarketProductBoard mKeyBoard;
+	//InputMethodManager mInputMethodManager;
+	public QtyOrPriceAdjustHandler(Context context,CurrencyNote currencyNote,MarketProductBoard keyBoard) {
+		mContext=context;
+		mCurrencyNote=currencyNote;
+		mKeyBoard=keyBoard;
+//		mCurrencySymbol = currencySymbol;
+//		mExchangeRateTobase = exchangeRateTobase;
+		productView=new ProductView();
+		totalView=new TotalView();
+		initView((Activity)context);
+	}
+
+//	private void setKeyBoard(MarketProductBoard keyBoard){
+//		mKeyBoard=keyBoard;
+//	}
+	/**
+	 * This method will be called in the construction method 
+	 * @param activity
+	 */
+	private void initView(Activity root){
+    	//enterBoxView.proName=(TextView)activity.findViewById(R.id.product_name);
+    	totalView.tPrice=(TextView)root.findViewById(R.id.total_price);
+    	totalView.tVolume=(TextView)root.findViewById(R.id.tv_of_pb_volume);
+    	totalView.tWeight=(TextView)root.findViewById(R.id.tv_of_pb_weight);
+    	totalView.tVolumeBar=(ProgressBar)root.findViewById(R.id.pb_volume);
+    	totalView.tWeightBar=(ProgressBar)root.findViewById(R.id.pb_weight);
+    	if(mCurrencyNote.isLeftSymbol){
+			((TextView)root.findViewById(R.id.total_lprice_symbol)).setText(mCurrencyNote.currencySymbol);
+		}else{
+			((TextView)root.findViewById(R.id.total_rprice_symbol)).setText(mCurrencyNote.currencySymbol);
+		}
+    	registerQtyChangeListerner();
+	}
+	
+	/**
+	 * After the method initView(activity) called this method will be 
+	 * called to register some listeners of some view's.  
+	 */
+	private void registerQtyChangeListerner(){	
+		
+	}
+	
+	/**
+	 * To init the total information of the products in the ListView 
+	 * @param volume unit is cm3
+	 * @param weight unit is kilogram
+	 * @param price 
+	 */
+	public void initTotalAttr(double volume,double weight,double price){
+		Log.e("init", "start:"+volume+";"+weight+";"+price);
+		mTotalPrice=price;
+		mTotalWeight=weight;
+		mTotalVolume=volume;
+		totalView.tPrice.setText(MyConstants.getFormatedPrice(mCurrencyNote.decimalFormat.format(mTotalPrice)));
+		totalView.tVolume.setText(MyConstants.getFormatedPrice(mCurrencyNote.decimalFormat.format(mTotalVolume/1000000)));
+		totalView.tVolumeBar.setProgress((int) Math.ceil(mTotalVolume));
+		totalView.tWeight.setText(MyConstants.getFormatedPrice(mCurrencyNote.decimalFormat.format(mTotalWeight)));
+		totalView.tWeightBar.setProgress((int) Math.ceil(mTotalWeight));
+		setTotalInforAlertColor();
+	}
+	
+	/**
+	 * init the max total value 
+	 * @param weight unit is kilogram
+	 * @param volume unit is cm3
+	 */
+	public void initTotalMaxAttr(int weight,int volume){
+		if(weight!=0&&volume!=0){
+			maxTotalVolume = volume;
+			maxTotalWeight = weight;
+			Log.e("total_volume","volume:"+volume);
+			Log.e("total_weight","weight:"+weight);
+			totalView.tVolumeBar.setMax(maxTotalVolume);
+			totalView.tWeightBar.setMax(maxTotalWeight);
+			totalView.tVolumeBar.setProgress((int) Math.ceil(0));
+			totalView.tWeightBar.setProgress((int) Math.ceil(0));
+			totalView.tVolumeBar.setProgress((int) Math.ceil(mTotalVolume));
+			totalView.tWeightBar.setProgress((int) Math.ceil(mTotalWeight));
+			totalView.tVolumeBar.setVisibility(View.VISIBLE);
+			totalView.tWeightBar.setVisibility(View.VISIBLE);
+			setTotalInforAlertColor();
+		}else{
+			maxTotalVolume = 0;
+			maxTotalWeight = 0;
+			totalView.tVolumeBar.setVisibility(View.INVISIBLE);
+			totalView.tWeightBar.setVisibility(View.INVISIBLE);
+			totalView.tWeight.setTextColor(Color.BLACK);
+			totalView.tVolume.setTextColor(Color.BLACK);
+		}
+		if(productView.name!=null){
+			setOnProductChange(true);
+			setProductNote(mProduct_id, productView.name.getText().toString(), mPreQty);
+			setOnProductChange(false);
+		}
+	}
+	
+	private void setTotalInforAlertColor(){
+		if(mTotalVolume<maxTotalVolume){
+			totalView.tVolume.setTextColor(Color.BLACK);
+		} else if(maxTotalVolume!=0){
+			totalView.tVolume.setTextColor(Color.RED);
+		}
+		
+		if(mTotalWeight<maxTotalWeight){
+			totalView.tWeight.setTextColor(Color.BLACK);
+		} else if(maxTotalWeight!=0){
+			totalView.tWeight.setTextColor(Color.RED);
+		}
+	}
+	
+	/**
+	 * when you choose a new product in the Product ListView,the information
+	 * in EnterBoxView will change,but the total information should not be 
+	 * changed.
+	 * Before initialize the information of the new product you chosen in the 
+	 * EnterBoxView,you should call it with the param is true
+	 * Don't forget after you have initialized the information in the EnterBoxView,
+	 * you should call it again with the param is false.
+	 * @param isChange if it is true information in TotalView will
+	 *                 not change,otherwise each change in EnterBoxView
+	 *                 will cause TotalView to change at the same time
+	 */
+	public void setOnProductChange(boolean isChange){
+		isOnProductChange=isChange;
+	}
+	
+	/**
+	 * When a new product in the products ListView is chosen,this method will 
+	 * be called to notify the views in the EnterBoxView.
+	 * Before you called this method may be you should call the method 
+	 * {setOnProductChange(boolean isChange)}. The detailed information you
+	 * can see the describe of that method. 
+	 * @param product_id
+	 * @param name
+	 * @param qty
+	 * @param price
+	 * @param totalPrice the total price of this goods.
+	 */
+	public void setProductView(HashMap<String, Object> adapterItem,int product_id,
+			TextView name,EditText
+			qty,TextView price,TextView totalPrice){
+		mAdapterItem=adapterItem;
+		productView.name=name;
+		productView.qty=qty;
+		productView.price=price;
+		productView.tPrice=totalPrice;
+		setProductNote(product_id, name.getText().toString(),
+				Integer.valueOf(qty.getText().toString().length()==0?"0":qty.getText().toString()));
+		productView.qty.addTextChangedListener(new TextWatcher() {
+			
+			public void onTextChanged(CharSequence s, int start,
+					int before, int count) {
+				//Log.e("test change","on");
+//				if(isOnProductChange){
+//					return;
+//				}
+				if((productView.qty.getText().toString().trim()).length()!=0){
+//					int currentQty=Integer.valueOf(i);
+					setQtyChangeEvent(Integer.valueOf(productView.qty.getText().toString().trim()));
+					return;
+				}else{
+					
+					setQtyChangeEvent(0);
+				}		 
+				
+			}
+
+			public void beforeTextChanged(CharSequence s, int start,
+					int count, int after) {
+			}
+
+			public void afterTextChanged(Editable s) {
+				//Log.e("test change","after");
+			}
+		});
+		
+//		productView.price.addTextChangedListener(new TextWatcher() {
+//			
+//			public void onTextChanged(CharSequence s, int start, int before, int count) {
+//				if((productView.price.getText().toString().trim()).length()!=0){
+////					int currentQty=Integer.valueOf(i);
+//					setPriceChangeEvent(Double.valueOf(productView.price.getText().toString().trim()));
+//					return;
+//				}else{
+//					setPriceChangeEvent(0);
+//				}
+//			}
+//			
+//			public void beforeTextChanged(CharSequence s, int start, int count,
+//					int after) {
+//			}
+//			
+//			public void afterTextChanged(Editable s) {
+//				// TODO Auto-generated method stub			
+//			}
+//		});
+	}
+	
+	/**
+	 * This method will be called by the method {setProductView(int product_id,
+	 *		TextView name,TextView qty,TextView price,TextView totalPrice)} to change 
+	 *		some information of the object of this class.The all information is of a new 
+	 *		product. 
+	 * @param product_id
+	 * @param name
+	 * @param initQty
+	 * @param price
+	 */
+	private void setProductNote(int product_id,String name,int initQty){
+		mPreQty=initQty; 
+//		mCurrentPrice=Double.valueOf((String)mAdapterItem.get(NAME.PRICE));
+		cursor = mContext.getContentResolver().query(PROVIDER_NAME.PRODUCT_CONTENT_URI, 
+				new String[]{PROVIDER_NAME.VOLUME,PROVIDER_NAME.WEIGHT,PROVIDER_NAME.MINQTY}, 
+				PROVIDER_NAME.PRODUCT_ID+"="+product_id, null, null);
+		cursor.moveToFirst();
+		mVolume=cursor.getDouble(0);
+		mWeight=cursor.getDouble(1);
+		minQty = cursor.getInt(2);
+		cursor.close();
+		if(maxTotalVolume!=0&&maxTotalWeight!=0){
+			int maxQtyOfVolume=(int) ((maxTotalVolume-mTotalVolume)/mVolume);
+			int maxQtyOfWeight=(int) ((maxTotalWeight-mTotalWeight)/mWeight);
+			maxQty = (maxQtyOfVolume>maxQtyOfWeight?maxQtyOfWeight:maxQtyOfVolume)+initQty;
+		}else{
+			maxQty=Integer.MAX_VALUE;
+		}
+		mKeyBoard.setMinQty(minQty);
+		mKeyBoard.setMaxQty(maxQty);
+		mProduct_id=product_id;
+		selectCurrentDiscountInfor(initQty);
+	}
+	
+	/**
+     * you could treat it as a method to get the Price of currentQty and the future 
+     * DiscountQty(if you order more may be the lower price you will get)
+     * @param currentQty
+     */
+	private void selectCurrentDiscountInfor(int currentQty){
+		cursor=mContext.getContentResolver().query(PROVIDER_NAME.SYNC_PRO_PRICE_CONTENT_URI, 
+			     new String[]{PROVIDER_NAME.QTY,PROVIDER_NAME.PRICE}, 
+			     PROVIDER_NAME.PRODUCT_ID+"=? and "+ PROVIDER_NAME.QTY+"<=?", 
+			     new String[]{String.valueOf(mProduct_id),String.valueOf(currentQty)}, 
+			     PROVIDER_NAME.QTY+" DESC");
+		if(!cursor.moveToFirst()){
+			cursor.close();
+			cursor=mContext.getContentResolver().query(PROVIDER_NAME.SYNC_PRO_PRICE_CONTENT_URI, 
+				     new String[]{PROVIDER_NAME.QTY,PROVIDER_NAME.PRICE}, 
+				     PROVIDER_NAME.PRODUCT_ID+"=?", 
+				     new String[]{String.valueOf(mProduct_id)}, 
+				     PROVIDER_NAME.QTY+" ASC");
+			if(!cursor.moveToFirst()){
+				cursor.close();
+				throw new IllegalArgumentException("need price");
+			}
+		}
+		
+		//when product choose again,the total information need not change.
+		//otherwise the mPrice is stand for the preproduct
+		double price=cursor.getDouble(1)*mCurrencyNote.exchangeRateTobase;
+//		double price=GetProductPrice.getPriceInBaseCurrency(mContext, mProduct_id, currentQty)*mCurrencyNote.exchangeRateTobase;
+		if(!isOnProductChange){
+			mTotalPrice+=(price-mCurrentPrice)*mPreQty;
+			totalView.tPrice.setText(MyConstants.getFormatedPrice(mCurrencyNote.decimalFormat.format(mTotalPrice)));		
+		}
+		mCurrentPrice=price;
+		productView.price.setText(MyConstants.getFormatedPrice(mCurrencyNote.decimalFormat.format(mCurrentPrice)));
+		mCurrentDiscountQty=cursor.getInt(0);	
+		cursor.close();
+		setFutureDiscountPriceInfor(currentQty);
+	}
+	
+	/**
+	 * to find the nearest discount you may get of the current good and current quantity
+	 * (with some goods,if you order more may be you will get a lower price)
+	 * @param currentQty
+	 */
+	private void setFutureDiscountPriceInfor(int currentQty) {
+		cursor=mContext.getContentResolver().query(PROVIDER_NAME.SYNC_PRO_PRICE_CONTENT_URI, 
+			     new String[]{PROVIDER_NAME.QTY,PROVIDER_NAME.PRICE}, PROVIDER_NAME.PRODUCT_ID+"=? and "+
+			     PROVIDER_NAME.QTY+">?", 
+			     new String[]{String.valueOf(mProduct_id),String.valueOf(currentQty)}, PROVIDER_NAME.QTY+" ASC");
+		if(cursor.moveToFirst()){
+			mFutureDiscountQty=cursor.getInt(0);
+			//Log.e("future discount","qty"+mFutureDiscountQty);
+			mKeyBoard.setDiscountQtyInfor(mContext.getString(R.string.quo_edit_qty_class)+mFutureDiscountQty);
+			mKeyBoard.setDiscountPriceInfor(mContext.getString(
+					R.string.quo_edit_price_class)+mCurrencyNote.decimalFormat.format(cursor.getInt(1)*mCurrencyNote.exchangeRateTobase));
+			
+			mKeyBoard.setDiscountInforViewVisibility(View.VISIBLE);
+		} else{
+			mFutureDiscountQty=Integer.MAX_VALUE;
+			mKeyBoard.setDiscountInforViewVisibility(View.INVISIBLE);
+		}
+		cursor.close();
+	}
+	
+	
+	
+    /**
+     * when the information in the EditView of quantity set has changed,
+     * this method will be called. The serial change may be caused with 
+     * this method
+     * @param currentQty
+     */
+	private void setQtyChangeEvent(int currentQty){
+		int differQty;
+		if((differQty=currentQty-mPreQty)!=0&&productView.qty!=null){
+			//Log.e("totalChange","change start");
+			//productView.qty.setText(String.valueOf(currentQty));
+			mTotalVolume+=mVolume*differQty;
+			mTotalWeight+=mWeight*differQty;//kg
+			mTotalPrice+=mCurrentPrice*differQty;
+			totalView.tVolume.setText(MyConstants.getFormatedPrice(
+					mCurrencyNote.decimalFormat.format(mTotalVolume/1000000)));//cm3 to m3 
+			totalView.tVolumeBar.setProgress((int) Math.ceil(mTotalVolume));
+			totalView.tWeight.setText(
+					MyConstants.getFormatedPrice(mCurrencyNote.decimalFormat.format(mTotalWeight)));
+			totalView.tWeightBar.setProgress((int) Math.ceil(mTotalWeight));
+			totalView.tPrice.setText(MyConstants.getFormatedPrice(mCurrencyNote.decimalFormat.format(mTotalPrice)));		
+			Log.e("init","tPrice text:"+(totalView.tPrice.getText()));
+			mPreQty=currentQty;
+			if(currentQty<mCurrentDiscountQty||currentQty>=mFutureDiscountQty){
+				selectCurrentDiscountInfor(currentQty);
+			}
+			productView.tPrice.setText(MyConstants.getFormatedPrice(mCurrencyNote.decimalFormat.format(mCurrentPrice*currentQty)));
+			setTotalInforAlertColor();
+			notifyChangeToAdapter(currentQty);
+			Log.e("init", "change:"+mTotalVolume+";"+mTotalWeight+";"+mTotalPrice);
+		}
+	}
+	
+	private void notifyChangeToAdapter(int qty){
+		mAdapterItem.put("qty", qty);
+		mAdapterItem.put("line_price",productView.tPrice.getText().toString());
+	}
+	
+//	/**
+//     * when the information in the EditView of quantity set has changed,
+//     * this method will be called. The serial change may be caused with 
+//     * this method
+//     * @param currentQty
+//     */
+//	private void setPriceChangeEvent(double nextPrice){
+//		double differPrice;
+//		if((differPrice=nextPrice-mCurrentPrice)!=0&&productView.qty!=null){
+//			//Log.e("totalChange","change start");
+//			mTotalPrice+=mPreQty*differPrice;
+//			totalView.tPrice.setText(mCurrencyNote.decimalFormat.format(mTotalPrice));		
+//			productView.tPrice.setText(mCurrencyNote.decimalFormat.format(nextPrice*mPreQty));
+//			mCurrentPrice=nextPrice;
+//			notifyPriceChangeToAdapter(nextPrice);
+//		}
+//	}
+//	
+//	private void notifyPriceChangeToAdapter(double price){
+//		mAdapterItem.put(NAME.PRICE, String.valueOf(price));
+//		mAdapterItem.put("line_price",productView.tPrice.getText().toString());
+//	}
+	
+//	public void saveToDB(int quote_id){
+//		ContentValues values = new ContentValues();
+//		values.put(PROVIDER_NAME.VOLUME, mTotalVolume);
+//		values.put(PROVIDER_NAME.WEIGHT, mTotalWeight);
+//		Log.e("save in product view","stact volume:"+mTotalVolume+",weight:"+maxTotalWeight);
+//		mContext.getContentResolver().update(PROVIDER_NAME.QUOTE_CONTENT_URI, values,
+//				PROVIDER_NAME.QUOTE_ID+"="+quote_id, null);
+//	}
+	//the following methods are used to get Information of current quote products
+	/**
+	 * @return the total price of the products in the ListView
+	 */
+	public double getTotalPrice(){
+		return mTotalPrice;
+	}
+	
+	public double getTotalVolume(){
+		return mTotalVolume;
+	}
+	
+	public double getTotalWeight(){
+		return mTotalWeight;
+	}
+	
+	private static class ProductView{
+		TextView name;
+		EditText qty;
+		TextView price;
+		TextView tPrice;
+	}
+	
+	private static class TotalView{
+		TextView tPrice;
+		TextView tVolume;
+		ProgressBar tVolumeBar;
+		TextView tWeight;
+		ProgressBar tWeightBar;
+	}
+}

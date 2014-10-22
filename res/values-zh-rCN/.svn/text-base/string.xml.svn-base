@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General Tag -->
+    <string name="gen_btn_ok">确定</string>
+    <string name="gen_btn_cancel">取消</string>
+    <string name="gen_btn_main">主页</string>
+    <string name="gen_btn_back">后退</string>
+    <string name="gen_btn_reset">重置</string>
+    <string name="gen_progress_wait">请稍等...</string>  
+    <string name="gen_empty_selection">请选择...</string> 
+    <string name="gen_btn_refresh">立即更新</string>
+    <string name="gen_dlg_nocurrency">汇率信息不是最新的，现在下载吗?</string>
+    <string name="gen_dlg_nocustomer">需要更新账户信息，现在更新吗?</string> 
+    <string name="gen_dlg_nolengthunit">需要更新物品长度单位信息，现在更新吗?</string>
+    <string name="gen_dlg_noweightunit">需要更新物品重量单位信息，现在更新吗?</string> 
+    <string name="gen_dlg_net_timeout">网络连接超时!</string> 
+    <string name="gen_dlg_price_update_fail">产品价格更新失败,也许你看到的产品价格不是正确的. 请在产品准备页面按"&lt;font color=\'#ff0000\'&gt;更新价格&lt;/font&gt;"按钮更新它!</string>
+    <string name="gen_refresh_success">更新成功</string>
+    <string name="gen_refresh_failure">更新失败</string> 
+    <string name="gen_loginneed_alert">您还未登录，现在登录吗?</string>
+    <string name="gen_unknown_host_toast">连接不到服务器.</string>    
+    <!-- Supermarket Express -->
+    <string name="app_name">超市快递</string>
+    <!-- Supermarket Login -->
+    <string name="lg_username">用户名</string>
+    <string name="lg_password">密码</string>
+    <string name="lg_btn_login">登录</string>
+    <string name="lg_prompt">只有一个账户可以在本手机激活</string>
+    <!-- Loding Activity -->
+    <string name="a0_loading">载入中...</string>
+    <string name="a0_company">酷佳科技有限公司</string>
+    <string name="load_statu_customer">获取账户信息...</string>
+    <string name="load_statu_currency">获取汇率信息...</string>
+    <string name="load_statu_payment">获取支付方式...</string>
+    <string name="load_statu_pay_term">获取支付帐期...</string>
+    <!-- Supermarket Main Activity -->
+    <string name="main_tag">主页信息</string>
+    <string name="main_serachproduct">搜索</string>
+    <string name="main_myfav">收藏夹</string>
+    <string name="main_prepare">准备订单</string>
+    <string name="main_quotes">订单与报价</string>
+    <string name="main_template_quotes">预配货柜</string>
+    <string name="main_exit">退出</string>
+    <string name="main_menu_item1">交易货币</string>
+    <string name="main_dig_noaccount">请先添加您的帐户</string>
+    <string name="main_dig_nocurrency">未能在本地找到，是否现在下载</string>
+    <string name="main_dig_auth_fail">账户验证失败,请重新选择!</string>
+    <!-- Search product Tab Activity -->
+    <string name="pro_search_tag">产品搜索</string>
+    <string name="b0_tab1">简单查询</string>
+    <string name="b0_tab2">高级查询</string>
+    <string name="b0_tab3">本地查询</string>
+    <!-- Search product Activity -->
+    <string name="b_barcode_tag">输入条形码</string>
+    <string name="b_scan">扫描</string>
+    <string name="b_search">搜索</string>
+    <string name="b_delete">删除</string>
+    <string name="b_back">主页</string>
+    <string name="b_tot_noproduct">没有相应产品!</string>
+    <string name="b_tot_barcodecatchfail">条码识别失败!</string>
+    <string name="b_tot_wrongbarcode">条码错误(小于13位)!</string>
+    <string name="pro_sim_sear_nobrand">请先选择一个品牌 !</string>
+    <!-- Advanced Search Product Activity -->
+    <string name="pro_adv_sear_brand">品牌</string>
+    <string name="pro_adv_sear_keyword">关键字</string>
+    <string name="pro_adv_sear_category">种类</string>
+    <string name="pro_adv_sear_manu">制造商</string>
+    <string name="b1_search">查询</string>
+    <string name="b1_dialog_prepage">前一页</string>
+    <string name="b1_dialog_nextpage">下一页</string>
+    <string name="b1_dialog_tag">产品列表</string>
+    <string name="b1_tot_nokeyword">请输入关键字!</string>
+    <string name="b1_tot_noproducts">未找到相应产品!</string>
+    <!-- Local Search Product Activity -->
+    <string name="b2_enter_product_name">输入产品名称</string>
+    <string name="b2_tag">产品列表</string>
+    <string name="b2_noproducts_tag">没有本地产品!</string>
+    <string name="c_dig_nounits">缺少单位常量，现在就下载吗?</string>
+    <!-- Display product Activity -->
+    <string name="pro_det_tag">产品详情</string>
+    <string name="pro_det_ev_qty_hint">数量</string>
+    <string name="c_addtofavor">添加到收藏夹</string>
+     <string name="c_addtoquoter">添加订单</string>
+    <string name="c_back">后退</string>
+    <string name="c_dig_noproduct">搜索产品无效!</string>
+    <string name="c_dig_downagain">重新下载产品吗?</string>
+    <string name="c_dig_unitdownfail">下载失败!</string>
+    <!-- My Favorites Activity -->
+    <string name="favo_tag">收藏夹</string>
+    <string name="d_tag">我的收藏夹</string>
+    <string name="d_addtoquote">添加到订单</string>
+    <string name="d_delete">删除</string>
+    <string name="d_back">主页</string>
+    <string name="d_noproduct_tag">没有产品!</string>
+    <!-- Prepare Quote Activity -->
+    <string name="quo_edit_tag_new">准备订单（新）</string>
+    <string name="quo_edit_tag_up">准备订单（改）</string>
+    <string name="quote_edit_btn_search">继续购物</string>
+    <string name="quo_edit_btn_refresh">更新价格</string>
+    <string name="quo_override_alert">有一份订单正在准备列表，您确定要覆盖吗？</string>
+    <string name="quo_nocontainer_tag">不指定货柜类型</string>
+    <string name="quo_nopayment">请选择一种支付方式!</string>
+    <string name="quo_nopayterm">请选择一种账期类型!</string>
+    <string name="quo_nodescribe">请描述你的订单!</string>
+    <string name="quo_nobilladdr">请选择账单地址!</string>
+    <string name="quo_noshipaddr">请选择配送地址!</string>  
+    <string name="e_menu_showdetail">详细信息</string>
+    <string name="e_menu_delete">删除</string>
+    <string name="e_menu_deleteall">删除所有</string>
+    <string name="e_dig_deleteall">确定删除所有商品吗?</string>
+    <string name="e_menu_myfavor">收藏夹</string>
+    <string name="e_noproduct_tag">空订单!</string>
+    <string name="e_tot_minqtylimit">达到最低购买数量!</string>
+    <string name="e_tot_noproductsub">请先添加一些产品到订单!</string>
+    <string name="e_dig_submitwrong">出现了一些提交错误，您可以到订单列表里面跟行列表查看是否提交成功!</string>
+    <string name="e_dig_invalidquote">无效的订单，请检查.</string>
+    
+    <string name="e_quote_detail">订单调整</string>
+    <string name="e_quote_summary">订单汇总</string>
+    <string name="e_qty">数量</string>
+    <string name="e_price">单价</string>
+    <string name="e_line_price">小计</string>
+    <string name="e_qty_class">数量</string>
+    <string name="e_price_class">价格</string>
+    <string name="e_total_price">总价格</string>
+    <string name="e_total_volume">总体积</string>
+    <string name="e_total_weight">总重量</string>
+    <string name="e_main">主页</string>
+    <string name="e_get_price">更新</string>
+    <string name="e_total_price_tab2">总价</string>
+    <string name="e_discount_price">折扣</string>
+    <string name="e_present_price">现价</string>
+    <string name="e_description">描述</string>
+    <string name="e_billing_address">账单地址</string>
+    <string name="e_shipping_address">配送地址</string>
+    <string name="e_payment">付款方式</string>
+    <string name="quo_payterm">支付帐期</string>
+    <string name="quo_deposit">定金:</string>
+    <string name="quo_period">帐期:</string>
+    <string name="e_payment_discount">付款方式折扣</string>
+    <string name="e_submit_quote">提交订单</string>
+    <string name="e_container_type">集装箱类型</string>
+    <string name="e_volume_symbol">立方米</string>
+    <string name="e_weight_symbol">千克</string>
+    <!-- My Quotes and Orders Activity -->
+    <string name="ord_list_tag">订单信息</string>
+    <string name="ord_list_tab_untreated">待处理报价单</string>
+    <string name="ord_list_tab_history">历史订单</string>
+    <string name="f_tag">我的订单：</string>
+    <string name="f_refresh">更新订单列表</string>
+    <string name="ord_list_noord_found">没有订单!</string>
+    <string name="f_back">主页</string>
+    <string name="f_noorders_tag">请更新...</string>
+    <string name="f_dig_unknowwrong">未知的更新异常</string>
+     <string name="f_dig_connectwrong">请检查连接!</string>
+    <!-- Quote Confirm Activity -->
+    <string name="quo_det_tag">订单详情</string>
+    <string name="g_tag">订单</string>
+    <string name="g_confirm">确认订单</string>
+    <string name="g_update">修改订单</string>
+    <string name="g_back">后退</string>
+    <string name="g_noorders_tag">暂无订单，请更新！</string>  
+    <string name="g_dig_quotenotfind">未找到相应订单，可能已过期!</string> 
+    <string name="g_dig_showfail">显示失败!</string> 
+    <string name="quo_det_as_temp">作为模板创建报价单</string>
+    <!-- Prewired Container List Activity -->
+    <string name="temp_list_port">港口</string>  
+    <string name="temp_list_zone">地区</string>  
+    <string name="temp_list_brand">品牌</string>  
+    <string name="temp_list_tag">预配订单</string> 
+    <!-- Prewired Container Detail Activity -->
+    <string name="temp_det_tag">预配订单详情</string>
+    <string name="i_container_type">货柜</string>
+    <string name="i_port">港口</string>
+    <string name="i_zone">地区</string>
+    <string name="i_brand">品牌</string>    
+    <string name="i_back">返回</string>  
+    <string name="i_order">订购</string> 
+    <string name="i_item_price">价格</string>  
+    <string name="i_item_tprice">总价</string>
+    <string name="search_list_btn_prev">前一页</string>
+    <string name="search_list_btn_next">下一页</string>
+    <!-- KeyBoard -->
+    <string name="key_board_maxqty">最大数量</string>
+    <string name="key_board_minqty">最小数量</string>
+    <!-- Authenticator Activity -->
+    <string name="auth_a_tag">酷佳帐号</string>
+    <string name="auth_a_username">用户名</string>
+    <string name="auth_a_password">密码</string>
+    <string name="auth_a_next">下一步</string>
+    <string name="auth_a_back">返回</string>
+    <string name="auth_a_invalidaccount">帐号无效!</string>
+    <string name="auth_a_connectfail">网络连接失败!</string>
+    <string name="auth_a_lackname">请输入用户名!</string>
+    <string name="auth_a_lackpassword">请输入密码!</string>
+    <!-- Prefrence of Setting -->
+    <string name="set_period_tag">同步周期设置</string>
+    <string name="set_period_currency">汇率同步间隔</string>
+    <string name="set_period_orderlist">订单列表同步间隔</string>
+    <string name="set_cache_tag">缓冲设置</string>
+    <string name="set_cache_product">产品保存在历史记录中的天数</string>
+    <!-- exit dialog -->
+    <string name="exit_text1">你确定</string>
+    <string name="exit_text2">退出</string>
+    <string name="dialog_title_exit_finish">退出</string>
+    <string name="base_btn_yes">是</string>
+    <string name="base_btn_no">否</string>
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  <PreferenceCategory android:title="@string/set_period_tag">
+      <ListPreference android:key="period_currency"
+      android:title="@string/set_period_currency"
+      android:entries="@array/period_currency"
+      android:entryValues="@array/period_currency_value"/>
+      <ListPreference android:key="period_orderlist"
+      android:title="@string/set_period_orderlist"
+      android:entries="@array/period_orderlist"
+      android:entryValues="@array/period_orderlist_value"/>
+  </PreferenceCategory>
+  <PreferenceCategory android:title="@string/set_cache_tag">
+      <ListPreference android:key="cache_pro_detail"
+      android:title="@string/set_cache_product"
+      android:entries="@array/cache_pro_detail"
+      android:entryValues="@array/cache_pro_detail_value"/>
+  </PreferenceCategory>
+</PreferenceScreen>

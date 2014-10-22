@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<category_list>
+    <category>
+    <category_id>51</category_id>
+    <name>调味品</name>
+  </category>
+    <category>
+    <category_id>52</category_id>
+
+    <name>休闲食品</name>
+  </category>
+    <category>
+    <category_id>53</category_id>
+    <name>饮料类</name>
+  </category>
+    <category>
+    <category_id>54</category_id>
+    <name>方便食品</name>
+  </category>
+    <category>
+    <category_id>55</category_id>
+    <name>酱菜类</name>
+  </category>
+    <category>
+    <category_id>56</category_id>
+    <name>粮油类</name>
+  </category>
+    <category>
+    <category_id>57</category_id>
+    <name>山珍干货</name>
+  </category>
+    <category>
+    <category_id>58</category_id>
+    <name>生鲜</name>
+  </category>
+    <category>
+    <category_id>59</category_id>
+    <name>日用品</name>
+  </category>
+  </category_list>

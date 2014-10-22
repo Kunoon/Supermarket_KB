@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical" 
+	android:id="@id/gen_background">
+    <LinearLayout 
+    	android:layout_height="@dimen/title_height" 
+    	android:layout_width="match_parent" 
+    	android:background="@drawable/titlebar" 
+    	android:id="@+id/textView1">
+        <Button 
+        	android:layout_width="@dimen/title_btn_width" 
+        	android:textColor="@color/btn_color" 
+        	android:id="@id/gen_btn_back" 
+        	android:textSize="@dimen/title_btn_word"
+        	android:background="@drawable/title_btn_back" 
+        	android:layout_height="wrap_content" 
+        	android:layout_gravity="center_vertical" 
+        	android:text="@string/gen_btn_back"/>
+        <TextView 
+        	android:textSize="@dimen/title_word" 
+        	android:layout_width="wrap_content" 
+        	android:layout_weight="1" 
+        	android:gravity="center"
+        	android:textColor="@color/title_color" 
+        	android:id="@+id/textView3" 
+        	android:layout_height="wrap_content" 
+        	android:layout_gravity="center" 
+        	android:text="@string/quo_det_tag"/>
+        <Button 
+        	android:layout_width="@dimen/title_btn_width" 
+        	android:textColor="@color/btn_color" 
+        	android:id="@id/gen_btn_main" 
+        	android:textSize="@dimen/title_btn_word"
+        	android:background="@drawable/title_btn_main" 
+        	android:layout_height="wrap_content" 
+        	android:layout_gravity="center_vertical" 
+        	android:text="@string/gen_btn_main"/>
+    </LinearLayout>
+    <FrameLayout 
+		android:layout_weight="1"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:background="#ffffffff">
+		<LinearLayout
+			android:id="@+id/linear2"
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:orientation="vertical">  
+			<!--  <TextView  
+			    android:id="@+id/name_quoteconfirm"
+			    android:layout_width="fill_parent" 
+			    android:layout_height="wrap_content"
+			    android:textSize="@dimen/text_word"
+			    android:textColor="@color/text_color"
+			    android:layout_marginLeft="10sp"
+			    android:layout_marginTop="5sp"/>  -->
+			<WebView
+				android:id="@+id/detail"
+				android:layout_width="fill_parent"
+				android:layout_height="120sp"
+				android:layout_weight="1"
+				android:focusable="true"/> 
+		</LinearLayout>  
+	</FrameLayout>
+	  
+	
+	<LinearLayout android:id="@+id/LinearLayout1"
+		android:layout_width="fill_parent"
+		android:layout_marginTop="4sp"
+		android:layout_height="wrap_content">
+		<FrameLayout android:layout_height="wrap_content"
+		    android:layout_width="0sp"
+		    android:layout_weight="1" >
+		    <Button
+			android:id="@+id/confirm_order"
+			android:layout_width="@dimen/btn_width"
+			android:layout_height="@dimen/btn_height"
+			android:layout_gravity="center"
+			android:text="@string/g_confirm"
+			android:textSize="@dimen/btn_word"
+			android:textColor="@color/btn_color"
+			android:gravity="center"
+			android:background="@drawable/btn_default"
+			android:visibility="gone"
+			/>
+		</FrameLayout>
+		<FrameLayout android:layout_height="wrap_content"
+		    android:layout_width="0sp"
+		    android:layout_weight="1">
+		    <Button
+			android:id="@+id/update_quote"
+			android:layout_width="@dimen/btn_width"
+			android:layout_height="@dimen/btn_height"
+			android:layout_gravity="center"
+			android:text="@string/g_update"
+			android:textSize="@dimen/btn_word"
+			android:textColor="@color/btn_color"
+			android:gravity="center"
+			android:background="@drawable/btn_default"  
+			android:visibility="gone"
+			/>
+		</FrameLayout>
+	</LinearLayout>
+	<FrameLayout android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:layout_marginBottom="4sp">
+		<Button
+		android:id="@+id/as_temp_cq"
+		android:layout_width="230px"
+		android:layout_height="@dimen/btn_height"
+		android:layout_gravity="center"
+		android:text="@string/quo_det_as_temp"
+		android:textSize="@dimen/btn_word"
+		android:textColor="@color/btn_color"
+		android:gravity="center"
+		android:background="@drawable/btn_default"  
+		android:visibility="gone"
+		/>   
+	</FrameLayout>
+	
+	<TextView 
+		android:layout_width="match_parent" 
+		android:id="@+id/textView2" 
+		android:background="@drawable/bottom" 
+		android:layout_height="@dimen/bottom_bar_height"/>
+</LinearLayout>

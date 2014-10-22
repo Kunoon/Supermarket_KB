@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/kb_express/!svn/ver/41/trunk/SupermarketExpress/src/com/koobest/m/supermarket/contentprovider
+END
+OrdersSyncContentProvider.java
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/src/com/koobest/m/supermarket/contentprovider/OrdersSyncContentProvider.java
+END
+PriceSyncContentProvider.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/src/com/koobest/m/supermarket/contentprovider/PriceSyncContentProvider.java
+END
+SupermarketContentProvider.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/kb_express/!svn/ver/27/trunk/SupermarketExpress/src/com/koobest/m/supermarket/contentprovider/SupermarketContentProvider.java
+END
+PROVIDER_NAME.java
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/svn/kb_express/!svn/ver/41/trunk/SupermarketExpress/src/com/koobest/m/supermarket/contentprovider/PROVIDER_NAME.java
+END
+TempOrdersSyncProvider.java
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/src/com/koobest/m/supermarket/contentprovider/TempOrdersSyncProvider.java
+END

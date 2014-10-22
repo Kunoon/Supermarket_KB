@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/kb_express/!svn/ver/238/trunk/SupermarketExpress/src/com/koobest/m/authenticate/toolkit
+END
+AuthTokenBuilder.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/src/com/koobest/m/authenticate/toolkit/AuthTokenBuilder.java
+END
+MD5ResultBuilder.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/src/com/koobest/m/authenticate/toolkit/MD5ResultBuilder.java
+END
+ConfirmAccountByServer.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/kb_express/!svn/ver/238/trunk/SupermarketExpress/src/com/koobest/m/authenticate/toolkit/ConfirmAccountByServer.java
+END

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView 
+	android:marqueeRepeatLimit="marquee_forever" 
+	android:ellipsize="end" 
+	android:singleLine="true" 
+	android:focusable="true"
+	android:layout_height="wrap_content"
+	android:layout_width="match_parent"
+	android:textSize="@dimen/text_word" 
+	android:textColor="@color/spinner_word_color" 
+	android:gravity="left" 
+	android:focusableInTouchMode="true"
+	style="?android:attr/spinnerDropDownItemStyle" 
+	android:id="@android:id/text1" 
+	xmlns:android="http://schemas.android.com/apk/res/android"/>

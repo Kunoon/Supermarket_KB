@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customer>
+  <customer_id>1</customer_id>
+  <firstname>test</firstname>
+  <lastname>test</lastname>
+  <email>test@testmarket1.com</email>
+  <telephone>416-111-2222</telephone>
+  <fax>416-111-3333</fax>
+  <status>1</status>
+  <approved>1</approved>
+  <data_added>2011-03-06 20:16:53</data_added>
+  <addresses>
+    <address default="true">
+      <address_id>1</address_id>
+      <company>Test Supermarket 1</company>
+      <firstname>test</firstname>
+      <lastname>test</lastname>
+      <address_1>100 Main St</address_1>
+      <address_2></address_2>
+      <postcode>M1M 1T1</postcode>
+      <city>Toronto</city>
+      <country_id>38</country_id>
+      <country>Canada</country>
+      <zone_id>610</zone_id>
+      <zone>Ontario</zone>
+    </address>
+    <address default="false">
+      <address_id>2</address_id>
+      <company>Test Supermarket 1</company>
+      <firstname>test</firstname>
+      <lastname>test</lastname>
+      <address_1>100 King St</address_1>
+      <address_2></address_2>
+      <postcode>M2M 2T2</postcode>
+      <city>Toronto</city>
+      <country_id>38</country_id>
+      <country>Canada</country>
+      <zone_id>610</zone_id>
+      <zone>Ontario</zone>
+    </address>
+    <address default="false">
+      <address_id>3</address_id>
+      <company>Test Supermarket 1</company>
+      <firstname>test</firstname>
+      <lastname>test</lastname>
+      <address_1>1000 Centre St</address_1>
+      <address_2></address_2>
+      <postcode>L1L 1G1</postcode>
+      <city>Markham</city>
+      <country_id>38</country_id>
+      <country>Canada</country>
+      <zone_id>610</zone_id>
+      <zone>Ontario</zone>
+    </address>
+  </addresses>
+  <credit_level>100</credit_level>
+  <payment_methods>
+    <payment_method>
+      <key>code</key>
+      <sort_order>1</sort_order>
+      <status>1</status>
+    </payment_method>
+  </payment_methods>
+</customer>

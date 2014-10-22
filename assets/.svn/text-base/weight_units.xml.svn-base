@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weight_class_list>
+    <weight_class>
+    <weight_class_id>1</weight_class_id>
+    <unit>kg</unit>
+    <title>Kilogram</title>
+    <value>1.00000000</value>
+  </weight_class>
+    <weight_class>
+    <weight_class_id>2</weight_class_id>
+    <unit>g</unit>
+    <title>Gram</title>
+    <value>1000.00000000</value>
+  </weight_class>
+    <weight_class>
+    <weight_class_id>5</weight_class_id>
+    <unit>lb</unit>
+    <title>Pound </title>
+    <value>2.20460000</value>
+  </weight_class>
+    <weight_class>
+    <weight_class_id>6</weight_class_id>
+    <unit>oz</unit>
+    <title>Ounce</title>
+    <value>35.27400000</value>
+  </weight_class>
+    <weight_class>
+    <weight_class_id>7</weight_class_id>
+    <unit>t</unit>
+    <title>Ton</title>
+    <value>0.00100000</value>
+  </weight_class>
+  </weight_class_list>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_height_top">35sp</dimen>
+    <dimen name="title_btn_width">60sp</dimen>
+    <dimen name="list_tag_font_size">16sp</dimen>
+    <dimen name="font_size">16sp</dimen>
+    <dimen name="font_size_s">12sp</dimen>
+    <dimen name="pro_name_font_size">14sp</dimen>
+    <dimen name="small_line">1dp</dimen>
+    <dimen name="margin_left">30dp</dimen>
+    <dimen name="margin_left_s">20dp</dimen>
+    <dimen name="margin_v_s">10dp</dimen>
+    
+    <!-- prewired_container_detaile -->
+    <dimen name="pred_procuct_name">13sp</dimen>
+    <dimen name="pred_qty">14sp</dimen>
+    
+    <!-- title -->
+    <dimen name="title_height">45sp</dimen>
+    <dimen name="tab_height">45sp</dimen>
+    <dimen name="bottom_bar_height">15sp</dimen>
+    
+    <!-- button -->
+    <dimen name="btn_height">45sp</dimen>
+    <dimen name="btn_width">110sp</dimen>
+    
+    <!-- list -->
+    <dimen name="list_height">48sp</dimen>
+    
+    <!-- word -->
+    <dimen name="price_word">14sp</dimen>
+    <dimen name="title_word">20sp</dimen> 
+    <dimen name="menu_word">17sp</dimen> 
+    <dimen name="key_word">16sp</dimen> 
+    <dimen name="btn_word">16sp</dimen> 
+    <dimen name="text_word">15sp</dimen> 
+    <dimen name="checkbox_word">15sp</dimen> 
+    <dimen name="fav_list_word">15sp</dimen>
+    <dimen name="list_word">16sp</dimen>
+    <dimen name="warm_word">12sp</dimen>
+    <dimen name="small_word">12sp</dimen>
+    <dimen name="big_word">18sp</dimen>
+    <dimen name="title_btn_word">15sp</dimen>
+    
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <string-array name="period_currency">
+      <item>两小时</item>
+      <item>四小时</item>
+      <item>半天</item>
+      <item>十二小时</item>
+      <item>一天</item>
+   </string-array>
+   <string-array name="period_orderlist">
+      <item>一小时</item>
+      <item>两小时</item>
+      <item>四小时</item>
+      <item>半天</item>
+      <item>十二小时</item>
+      <item>一天</item>
+   </string-array>
+   <string-array name="cache_pro_detail">
+      <item>三天</item>
+      <item>五天</item>
+      <item>一星期</item>
+   </string-array>
+</resources>

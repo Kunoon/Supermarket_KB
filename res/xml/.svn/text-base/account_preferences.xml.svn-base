@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android"> 
+          <PreferenceCategory 
+          android:title="Sync frequency Settings" />
+                 <!--  android:title="General Settings"  />  
+                 android:summary="Sync frequency, notifications, etc."-->
+          <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+              android:key="account_settings"
+              android:title="Customer Profile"   
+              android:summary="Setting sync period of this account."      
+              >
+             <intent
+                  android:action="com.koobest.m.accountsetting.ACCOUNT_SETUP"
+                  android:targetPackage="com.koobest.m.supermarket.activities"
+                  android:targetClass="com.koobest.m.accountsetting.FrequenciesSettingActivity" >
+                  <extra android:name="@string/authority_key" android:value="@string/authority_customer" />
+             </intent> 
+          </PreferenceScreen>
+          <Preference xmlns:android="http://schemas.android.com/apk/res/android"
+              android:key="account_settings"
+              android:title="Order Status"   
+              android:summary="Setting sync period of this account."      
+              >
+             <intent
+                  android:action="com.koobest.m.accountsetting.ACCOUNT_SETUP"
+                  android:targetPackage="com.koobest.m.supermarket.activities"
+                  android:targetClass="com.koobest.m.accountsetting.FrequenciesSettingActivity" >
+                  <extra android:name="@string/authority_key" android:value="@string/authority_orders" />
+             </intent> 
+          </Preference>
+          
+          
+          <PreferenceCategory 
+          android:title="Help" />
+          <Preference xmlns:android="http://schemas.android.com/apk/res/android"
+              android:key="account_settings"
+              android:title="Notice and Help"   
+                  
+              >
+             <!--  android:summary="Setting product delete period etc." 
+             <intent
+                  android:action="com.koobest.m.accountsetting.ACCOUNT_SETUP"
+                  android:targetPackage="com.koobest.m.supermarket.activities"
+                  android:targetClass="com.koobest.m.supermarket.account.setting.GeneralSettingActivity" >
+             </intent>  -->
+          </Preference>
+          
+      </PreferenceScreen>
+  
+        

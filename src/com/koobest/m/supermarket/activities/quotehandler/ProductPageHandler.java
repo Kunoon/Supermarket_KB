@@ -1,0 +1,770 @@
+package com.koobest.m.supermarket.activities.quotehandler;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.text.InputType;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
+import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.RelativeLayout.LayoutParams;
+import android.widget.SimpleAdapter.ViewBinder;
+
+import com.koobest.m.supermarket.activities.DisplayProduct;
+import com.koobest.m.supermarket.activities.MyFavorites;
+import com.koobest.m.supermarket.activities.R;
+import com.koobest.m.supermarket.activities.productsearch.SearchProductTab;
+import com.koobest.m.supermarket.constant.Constants;
+import com.koobest.m.supermarket.contentprovider.PROVIDER_NAME;
+import com.koobest.m.supermarket.database.NAME;
+import com.koobest.m.supermarket.toolkits.aboutprice.GetProductPrice;
+import com.koobest.m.supermarket.toolkits.aboutprice.UpdateProductPriceTask;
+import com.koobest.m.supermarket.toolkits.aboutprice.UpdateProductPriceTask.OnTaskStautChangeListener;
+import com.koobest.m.supermarket.toolkits.ofcurrency.CurrencyNote;
+import com.koobest.m.sync.contentprovider.SYNC_PROVIDER_NAME;
+import com.koobest.widget.keyboard.DigitKeyBoard;
+import com.koobest.widget.keyboard.MarketProductBoard;
+
+public class ProductPageHandler extends Activity{
+	private final static String TAG="ProductPageHandler";
+	private static final int DELETE_ALL_DIALOG=3;
+	private ListView mListView;
+	private Spinner mContainer;
+	private MarketProductBoard mKeyBoard;
+//	private final Context mContext;
+//	final View comRootView;
+	private int mQuoteID;
+	private CurrencyNote mCurrencyNote;
+	private QtyOrPriceAdjustHandler mProductAdjustView;
+	private int mSpinnerLayout = R.layout.my_spinner;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.prepare_quote_detail);
+		mQuoteID=((EditQuote)getParent()).mQuoteID;
+	    mCurrencyNote=((EditQuote)getParent()).mCurrencyNote;
+		initView();
+	    new PrepareViewDataTask(this).execute();
+	    maybeCreateKeyBoard(this);
+		mProductAdjustView=new QtyOrPriceAdjustHandler(this, mCurrencyNote, mKeyBoard);
+		findViewById(R.id.btn_refresh_price).setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				new UpdateProductPriceTask(getParent()==null?ProductPageHandler.this:getParent(), new OnTaskStautChangeListener(){
+
+					public void onFinished(Bundle result) {
+						if(getParent() instanceof EditQuote){
+							((EditQuote)getParent()).hideProgress();
+						}
+						
+						if(result.getBoolean(UpdateProductPriceTask.TASK_RESULT_KEY, false)){
+							Toast.makeText(getBaseContext(), getString(R.string.gen_refresh_success), Toast.LENGTH_SHORT).show();
+						}else{
+							Toast.makeText(getBaseContext(), getString(R.string.gen_refresh_failure), Toast.LENGTH_SHORT).show();
+						}
+					}
+
+					public void onStart() {
+						((EditQuote)getParent()).showProgress();	
+					}}).execute();
+			}
+		});
+		
+		findViewById(R.id.btn_search).setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(), SearchProductTab.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				intent.putExtra(Constants.CLASS_NAME_KEY, TAG);
+				intent.putExtra(NAME.QUOTE_ID, mQuoteID);
+				Log.i(TAG,"flag:"+intent.getFlags());
+				startActivity(intent);
+//				finish();
+			}
+		});
+		
+		findViewById(R.id.btn_myfavor).setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(getBaseContext(), MyFavorites.class);
+				intent.putExtra(Constants.CLASS_NAME_KEY, TAG);
+				intent.putExtra(NAME.QUOTE_ID, mQuoteID);
+				startActivity(intent);
+//				finish();
+			}
+		});
+	}
+	
+	private void initView(){
+//		System.out.println("79"+(findViewById(R.id.my_quote_listview).getClass().getName()));
+//		System.out.println("80"+(findViewById(R.id.quote_container).getClass().getName()));
+		mListView=(ListView)findViewById(R.id.my_quote_listview);
+		mContainer = (Spinner)findViewById(R.id.quote_container);
+	}
+	
+	private void maybeCreateKeyBoard(Context context){
+		if(mKeyBoard==null){
+			mKeyBoard=new MarketProductBoard(this);
+		}
+	}
+	
+	private void refreshListView(List<Map<String, Object>> data){
+		if (data==null) {
+			ArrayAdapter<String> array_adapter = new ArrayAdapter<String>(
+					getApplicationContext(),
+					android.R.layout.test_list_item,
+					new String[] {getString(R.string.quo_edit_nocontainer) });
+			mListView.setAdapter(array_adapter);
+			mListView.setEnabled(false);
+//TODO replace a method	with this function		findViewById(R.id.submit).setEnabled(false);
+		} else {
+			int priceSymbolId,tPriceSymbolId;
+		    if(mCurrencyNote.isLeftSymbol){
+				priceSymbolId=R.id.lv_lprice_symbol;
+				tPriceSymbolId=R.id.lv_ltprice_symbol;
+			}else{
+				priceSymbolId=R.id.lv_rprice_symbol; 
+				tPriceSymbolId=R.id.lv_rtprice_symbol;
+			}
+			SimpleAdapter adapter = new SimpleAdapter(getApplicationContext(), data,
+					R.layout.of_prepare_a_quote_page,
+					new String[] { "product_name", "qty","qty_unit", "symbol",NAME.PRICE,"symbol",
+							"line_price" }, new int[] { R.id.product_tv,
+							R.id.qty_et,R.id.qty_unit,priceSymbolId, R.id.unit_price_tv,
+							tPriceSymbolId,R.id.line_price_tv });
+			adapter.setViewBinder(new ListViewAdapterBinder());
+			mListView.setAdapter(adapter);
+			mListView.setOnScrollListener(new OnScrollListener() {
+				
+				public void onScrollStateChanged(AbsListView view, int scrollState) {
+				}
+				
+				public synchronized void onScroll(AbsListView view, int firstVisibleItem,
+						int visibleItemCount, int totalItemCount) {
+					Log.e("scroll","first:"+firstVisibleItem+";visible count:"+visibleItemCount+";total count:"+totalItemCount);
+					if(mKeyBoard!=null){
+						int id=mKeyBoard.getId();
+						Log.e("id","id:"+id);
+						if(id==-1){
+							return;
+						}
+					   
+						if((id<firstVisibleItem||id>firstVisibleItem+visibleItemCount-1)&&(mKeyBoard.getParent()!=null)){
+							//((LinearLayout)mKeyBoard.get().getParent()).removeView(mKeyBoard.get());
+							mKeyBoard.close();
+						}
+					    /*else if((firstVisibleItem==id||firstVisibleItem+visibleItemCount-1==id)&&(mKeyBoard.get().getParent()==null)&&view.getChildAt(id)!=null){
+							//System.out.println(view.getSelectedView()==null);
+							((LinearLayout)view.getChildAt(id)).addView(mKeyBoard.get());
+						}*/
+					}
+				}
+			});
+			mListView.setEnabled(true);
+		}
+	}
+	
+	public void refreshContainerData(ArrayAdapter<String> adapter,int selectIndex) {
+		mContainer.setAdapter(adapter);
+		mContainer.setSelection(selectIndex);
+		mContainer.setOnItemSelectedListener(new OnItemSelectedListener() {
+			@SuppressWarnings("unchecked")
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				if(position==0){
+					mProductAdjustView.initTotalMaxAttr(0,0);
+				}else{
+					Cursor cursor = getContentResolver().query(SYNC_PROVIDER_NAME.CONTAINER_CONTENT_URI,
+							new String[]{SYNC_PROVIDER_NAME.VOLUME,SYNC_PROVIDER_NAME.WEIGHT}, null, null, null);
+					if(cursor.moveToPosition(position-1)){
+						mProductAdjustView.initTotalMaxAttr((int)(cursor.getDouble(1)), (int)(cursor.getDouble(0)*1000000));
+					}
+					cursor.close();
+				}
+				if(mListView.getSelectedItemPosition()>=0&&mListView.getAdapter() instanceof SimpleAdapter){
+					mProductAdjustView.setOnProductChange(true);
+					View view = mListView.getSelectedView();
+					mProductAdjustView.setOnProductChange(true);
+					mProductAdjustView.setProductView(
+							(HashMap<String, Object>)mListView.getAdapter().getItem(mListView.getSelectedItemPosition()),
+							(Integer)((Map<String, Object>)mListView.getAdapter().getItem(position)).get(NAME.PRODUCT_ID),
+							(TextView)view.findViewById(R.id.product_tv),
+							(EditText)view.findViewById(R.id.qty_et), 
+							(TextView)view.findViewById(R.id.unit_price_tv),
+							(TextView)view.findViewById(R.id.line_price_tv));
+					mProductAdjustView.setOnProductChange(false);
+				}
+			}
+			public void onNothingSelected(AdapterView<?> arg0) {
+				
+			}
+		});
+		if(selectIndex==0){
+			mProductAdjustView.initTotalMaxAttr(0,0);
+		}else{
+			Cursor cursor = getContentResolver().query(SYNC_PROVIDER_NAME.CONTAINER_CONTENT_URI,
+					new String[]{SYNC_PROVIDER_NAME.VOLUME,SYNC_PROVIDER_NAME.WEIGHT}, null, null, null);
+			if(cursor.moveToPosition(selectIndex-1)){
+				mProductAdjustView.initTotalMaxAttr((int)cursor.getDouble(1), (int)cursor.getDouble(0)*1000000);
+			}
+			cursor.close();
+		}
+		
+		
+	}
+	
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		menu.add(0,Menu.FIRST+1, v.getId(), getString(R.string.quo_edit_menu_showdetail));
+		menu.add(0,Menu.FIRST, v.getId(), getString(R.string.quo_edit_menu_delete));
+		menu.add(0,Menu.FIRST+2, v.getId(), getString(R.string.quo_edit_menu_deleteall));
+	}
+	
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case Menu.FIRST:
+			int position=item.getOrder();
+			mListView.setEnabled(false);
+			Map<String, Object> currentItem = (Map<String, Object>) mListView.getItemAtPosition(position);
+			int productID=(Integer) currentItem.get(NAME.PRODUCT_ID);
+			     getContentResolver().delete(
+					PROVIDER_NAME.QUOTE_PRODUCT_CONTENT_URI,
+					PROVIDER_NAME.QUOTE_ID+"="+mQuoteID+" and "+
+					PROVIDER_NAME.PRODUCT_ID + "="+ productID, null);	
+			if ((mListView.getAdapter().getCount()-1)!= 0) {
+				SimpleAdapter adapter=(SimpleAdapter) mListView.getAdapter();
+				List<Map<String, Object>> adapterData=new ArrayList<Map<String, Object>>(mListView.getAdapter().getCount()-1);
+				int qty=0, maxCount=mListView.getAdapter().getCount();
+				for(int i=0;i<maxCount;i++){
+					if(i!=position){
+						adapterData.add((Map<String,Object>)adapter.getItem(i));
+					} else {
+						HashMap<String,Object> adpteritem=(HashMap<String,Object>)adapter.getItem(position);
+						qty = adpteritem.get("qty") instanceof Integer?(Integer)adpteritem.get("qty"):Integer.valueOf((String)adpteritem.get("qty"));
+					}
+				}
+		
+				Cursor cursor=getContentResolver().query(PROVIDER_NAME.SYNC_PRO_PRICE_CONTENT_URI, 
+					     new String[]{PROVIDER_NAME.PRICE}, 
+					     PROVIDER_NAME.PRODUCT_ID+"=? and "+ PROVIDER_NAME.QTY+"<=?", 
+					     new String[]{String.valueOf(productID),String.valueOf(qty)}, 
+					     PROVIDER_NAME.QTY+" DESC");
+				if(!cursor.moveToFirst()){
+					cursor.close();
+					cursor=getContentResolver().query(PROVIDER_NAME.SYNC_PRO_PRICE_CONTENT_URI, 
+						     new String[]{PROVIDER_NAME.PRICE}, 
+						     PROVIDER_NAME.PRODUCT_ID+"="+ productID, null, 
+						     PROVIDER_NAME.QTY+" ASC");
+					cursor.moveToFirst();
+				}
+				final double price = cursor.getDouble(0)*mCurrencyNote.exchangeRateTobase;
+				cursor.close();
+				cursor=getContentResolver().query(PROVIDER_NAME.PRODUCT_CONTENT_URI,
+						new String[]{PROVIDER_NAME.VOLUME,
+			            PROVIDER_NAME.WEIGHT} ,
+			            PROVIDER_NAME.PRODUCT_ID+"="+productID, 
+			            null,null);
+				cursor.moveToFirst();
+				Log.e(TAG,"delete qty:"+qty);
+				Log.e(TAG, "delete price"+price);
+				mProductAdjustView.initTotalAttr(
+						mProductAdjustView.getTotalVolume()-cursor.getDouble(0)*qty, 
+						mProductAdjustView.getTotalWeight()-cursor.getDouble(1)*qty,
+						mProductAdjustView.getTotalPrice()-price*qty);
+				cursor.close();
+				refreshListView(adapterData);
+			} else {
+				mProductAdjustView.initTotalAttr(0,0,0);
+				refreshListView(null);
+			}
+			mListView.setEnabled(true);
+			break;
+		case Menu.FIRST+1:
+			Intent intent = new Intent();
+			intent.setClass(getApplicationContext(),
+					DisplayProduct.class);
+			Map<String, Object> currentItem1 = (Map<String, Object>) mListView.getItemAtPosition(item.getOrder());
+			intent.putExtra("product_id", (Integer) currentItem1.get(NAME.PRODUCT_ID));
+//			intent.putExtra(Constants.CLASS_NAME_KEY, "EditQuote");
+//			intent.putExtra(NAME.QUOTE_ID, mQuoteID);
+			(getParent() != null?getParent():this).startActivity(intent);
+			break;
+		case Menu.FIRST+2:
+			showDialog(DELETE_ALL_DIALOG,null);
+			break;
+		}
+		return false;
+	}
+	
+	protected Dialog onCreateDialog(int id, Bundle args) {
+//		Context context = mListView.getContext();
+//		Dialog dialog;
+		switch(id){
+		case DELETE_ALL_DIALOG:
+				return new AlertDialog.Builder(this).
+				//setIcon(android.R.drawable.)
+			    setMessage(getString(R.string.quo_edit_dig_deleteall)).
+			    setPositiveButton(getString(R.string.gen_btn_ok),new DialogInterface.OnClickListener() {
+				    public void onClick(DialogInterface dialog, int which){
+				    	getContentResolver().delete(
+								PROVIDER_NAME.QUOTE_PRODUCT_CONTENT_URI,
+								PROVIDER_NAME.QUOTE_ID+"="+mQuoteID, null);
+						mProductAdjustView.initTotalAttr(0,0,0);
+						refreshListView(null);
+				    } 
+			    }).setNegativeButton(getString(R.string.gen_btn_cancel), new DialogInterface.OnClickListener() {				
+					public void onClick(DialogInterface dialog, int arg1) {
+						dialog.dismiss();
+					}
+				}).create();
+		}
+		return super.onCreateDialog(id, args);
+	}
+
+	
+	class ListViewAdapterBinder implements ViewBinder{
+
+		public boolean setViewValue(final View view, Object data,
+				String textRepresentation) {
+			if(view.getId()==R.id.qty_et){
+				view.setOnTouchListener(new OnTouchListener() {
+					
+					public boolean onTouch(View v, MotionEvent event) {
+
+						Log.i("keyBoardTouch", "touch:"+event.getAction());
+						editTextOnTouchClickEvent(view, event);
+						mKeyBoard.setEditView((EditText)v);
+						return false;
+					}
+				});
+				((View)view.getParent()).setOnLongClickListener(new OnLongClickListener() {
+					
+					public boolean onLongClick(View v) {
+						mListView.setId(mListView.getPositionForView(view));
+						registerForContextMenu(mListView);
+						return false;
+					}
+				});
+				view.setOnFocusChangeListener(new OnFocusChangeListener() {
+					
+					public void onFocusChange(View v, boolean hasFocus) {
+						if(hasFocus){
+							if(((EditText)v).getText().length()!=0&&Integer.valueOf(((EditText)v).getText().toString())==0){
+								((EditText)v).setText("");
+							}
+						}
+					}
+				});
+			}
+//			else if(view.getId()==R.id.unit_price_tv){
+//				view.setOnTouchListener(new OnTouchListener() {
+//					
+//					public boolean onTouch(View v, MotionEvent event) {
+//
+//						Log.i("keyBoard", "touch");
+////						return editTextOnTouchClickEvent(view, event);
+//						editTextOnTouchClickEvent(view, event);
+//						mKeyBoard.setEditView((EditText)v,DigitKeyBoard.TYPE_FLOAT);
+//						return false;
+//					}
+//				});
+//			}
+			return false;
+		}
+		
+		private boolean editTextOnTouchClickEvent(View v,MotionEvent event){
+			//Log.e("keyBoard", "event"+event.getAction());
+
+			((EditText)v).setInputType(InputType.TYPE_NULL);
+			if(event.getAction()==MotionEvent.ACTION_DOWN){
+				//((EditText)v).setFocusable(true);
+				LayoutParams params=new LayoutParams(
+						ViewGroup.LayoutParams.MATCH_PARENT,
+						ViewGroup.LayoutParams.WRAP_CONTENT);
+				params.addRule(RelativeLayout.BELOW, R.id.qty_et);
+				if(mKeyBoard==null){
+					Log.e("keyBoard", "null");
+					maybeCreateKeyBoard(v.getContext());
+					((RelativeLayout)v.getParent()).addView(mKeyBoard, params);
+				}else if(mKeyBoard.getParent()==null){
+					Log.e("keyBoard", "parent null");
+					((RelativeLayout)v.getParent()).addView(mKeyBoard, params);
+				}else if(!(v.getParent()).equals(mKeyBoard.getParent())){
+					Log.e("keyBoard", "parent not equal");
+					mKeyBoard.close();
+					((RelativeLayout)v.getParent()).addView(mKeyBoard, params);
+				}else if((v.getParent()).equals(mKeyBoard.getParent())){
+					Log.e("keyBoard", "parent equal");
+					return false;
+				}
+				
+				//view.requestLayout();
+				//Log.i("position","lv_bottom:"+lv_products.getBottom()+",keyBoard_bot:"+((View)mKeyBoard.get().getParent()).getTop());
+				//lv_products.scrollTo(0, lv_products.getBottom()-mKeyBoard.get().getMeasuredHeight());
+				
+				View parent=(RelativeLayout)v.getParent();					
+				int position = mListView.getPositionForView(parent);
+				mKeyBoard.setId(position);
+				if(position==mListView.getLastVisiblePosition()){
+					mListView.smoothScrollToPosition(position+1);
+					//lv_products.smoothScrollToPosition(position-1);
+				}else if(parent.getBottom()>mListView.getBottom()){
+					mListView.smoothScrollBy(-(parent.getBottom()-mListView.getBottom()), 1);
+				}	
+				v.requestFocus();
+				handleEditViewClickEvent(v);
+				((EditText)v).setSelection(((EditText)v).getText().length());
+			}
+			return true;
+		}
+		
+		@SuppressWarnings("unchecked")
+		private void handleEditViewClickEvent(View view){
+			int position=mListView.getPositionForView((View)view.getParent());
+			View v=(View)view.getParent();
+			mProductAdjustView.setOnProductChange(true);
+			mProductAdjustView.setProductView(
+					(HashMap<String, Object>)mListView.getAdapter().getItem(position),
+					(Integer)((Map<String, Object>)mListView.getAdapter().getItem(position)).get(NAME.PRODUCT_ID),
+					(TextView)v.findViewById(R.id.product_tv),
+					(EditText)v.findViewById(R.id.qty_et), 
+					(TextView)v.findViewById(R.id.unit_price_tv),
+					(TextView)v.findViewById(R.id.line_price_tv));
+			mProductAdjustView.setOnProductChange(false);
+		}
+	}
+	
+	private class PrepareViewDataTask extends AsyncTask<Object,Bundle, Bundle>{
+    	private Context mContext;
+        private List<Map<String, Object>> mAdapterData=null;
+        private ArrayAdapter<String> mContainerAdapter=null,mAddressAdapter=null,mPaymentAddress=null;
+        private double tVolume=0,tWeight=0,tPrice=0;
+        public PrepareViewDataTask(Context context) {
+        	Log.e("prepare data task","start");
+			mContext=context;
+//			mCurrencySymbol=currencySymbol;
+		}
+        
+		protected Bundle doInBackground(Object... params) {
+			Log.e("prepare data task","background start");
+			if(!Thread.interrupted()){
+				initContainerList();
+			}	
+			return initTab1Data();
+		}
+		
+		public Bundle initTab1Data(){
+			ContentResolver contentResolver = mContext.getContentResolver();
+			Cursor cursor = contentResolver.query(PROVIDER_NAME.QUOTE_CONTENT_URI,
+					new String[] { PROVIDER_NAME.QUOTE_ID,PROVIDER_NAME.VOLUME,
+		            PROVIDER_NAME.WEIGHT},
+					PROVIDER_NAME.QUOTE_ID + "=" + mQuoteID
+							, null,null);	
+			if(!cursor.moveToFirst()){
+				cursor.close();
+				Bundle result = new Bundle();
+				result.putBoolean("result", false);
+				return result;
+			}
+			final double tVolume=cursor.getDouble(1),tWeight=cursor.getDouble(2);
+			cursor.close();
+			
+			
+			double total_price=0.0,line_price;
+			
+			Cursor c= contentResolver.query(
+						PROVIDER_NAME.QUOTE_PRODUCT_CONTENT_URI,
+						new String[] { PROVIDER_NAME.PRODUCT_ID,
+								 PROVIDER_NAME.QTY},
+						PROVIDER_NAME.QUOTE_ID + "=" + mQuoteID, null,
+						null);
+			if(c.getCount()==0){
+				c.close();
+				Bundle result = new Bundle();
+				result.putBoolean("result", true);
+				return result;
+			}
+			mAdapterData = new ArrayList<Map<String, Object>>(c.getCount());
+			Map<String, Object> item;
+			double price;
+			for(int qty,product_id;c.moveToNext();){
+				item = new HashMap<String, Object>();
+				item.put("symbol", mCurrencyNote.currencySymbol);
+				product_id = c.getInt(0);
+				item.put(NAME.PRODUCT_ID, product_id);
+			    item.put("tag", c.getPosition());
+				qty=c.getInt(1);
+				//item.put("product_name",c.getString(1));
+				item.put("qty",qty);
+//				cursor = contentResolver.query(PROVIDER_NAME.SYNC_PRO_PRICE_CONTENT_URI,
+//						new String[]{PROVIDER_NAME.PRICE}, 
+//						PROVIDER_NAME.PRODUCT_ID+"="+product_id+" and "+
+//						PROVIDER_NAME.QTY+"<="+qty, null, PROVIDER_NAME.QTY+" DESC");
+//				if(!cursor.moveToFirst()){
+//					cursor.close();
+//					cursor = contentResolver.query(PROVIDER_NAME.SYNC_PRO_PRICE_CONTENT_URI,
+//							new String[]{PROVIDER_NAME.PRICE}, 
+//							PROVIDER_NAME.PRODUCT_ID+"="+product_id, null, PROVIDER_NAME.QTY+" ASC");
+//					cursor.moveToFirst();
+//				}
+//				price=cursor.getDouble(0)*mCurrencyNote.exchangeRateTobase;
+////				price=c.getDouble(2)*mCurrencyNote.exchangeRateTobase;
+				price = GetProductPrice.getPriceInBaseCurrency(mContext, product_id, qty)*mCurrencyNote.exchangeRateTobase;
+				line_price=price*qty;
+				item.put(NAME.PRICE,MyConstants.getFormatedPrice(mCurrencyNote.decimalFormat.format(price)));
+				item.put("line_price",MyConstants.getFormatedPrice(mCurrencyNote.decimalFormat.format(line_price)));
+				total_price+=line_price;
+				mAdapterData.add(item);
+				cursor.close();
+				cursor = contentResolver.query(PROVIDER_NAME.PRODUCT_CONTENT_URI,
+						new String[]{PROVIDER_NAME.PRODUCT_NAME,PROVIDER_NAME.QTY_UNIT}, 
+						PROVIDER_NAME.PRODUCT_ID+"="+product_id, null, null);
+				if(cursor.moveToFirst()){
+					item.put("product_name",cursor.getString(0));
+					item.put("qty_unit",cursor.getString(1));
+				}
+				cursor.close();
+			} 
+			c.close();
+		    setTotalAttr(tVolume, tWeight, total_price);
+		    Bundle result = new Bundle();
+			result.putBoolean("result", true);
+			return result;
+		}
+		
+		private void initContainerList() {
+			Cursor cursor = mContext.getContentResolver().query(PROVIDER_NAME.QUOTE_CONTENT_URI,
+					new String[]{PROVIDER_NAME.CONTAINER_CLASS_ID}, 
+					PROVIDER_NAME.QUOTE_ID+"="+mQuoteID,
+					null, null);
+			int selectId=0;
+			if(cursor.moveToFirst()){
+				selectId = cursor.getInt(0);
+			}
+			cursor.close();
+			
+			/*cursor = getContentResolver().query(SYNC_PROVIDER_NAME.CONTAINER_CONTENT_URI,
+					new String[]{SYNC_PROVIDER_NAME.CONTAINER_CLASS_ID,SYNC_PROVIDER_NAME.VOLUME,
+					SYNC_PROVIDER_NAME.WEIGHT}, null, null, null);
+			if(cursor.getCount()==0){
+				Bundle result = new Bundle();
+				result.putBoolean("containerlist_result", true);
+				publishProgress(result);
+				cursor.close();
+				return;
+			}
+			String data[] = new String[cursor.getCount()],
+		        volumeUnit=getString(R.string.e_cubic_meter),
+		        weightUnit=getString(R.string.e_ton);
+			int index=0,selectIndex=0;
+			while(cursor.moveToNext()){
+				if(selectId==cursor.getInt(0)){
+					selectIndex=index;
+				}
+				data[index++] = cursor.getString(1)+volumeUnit+cursor.getString(2)+weightUnit;
+			}
+			cursor.close();*/
+			cursor = mContext.getContentResolver().query(SYNC_PROVIDER_NAME.CONTAINER_CONTENT_URI,
+					new String[]{SYNC_PROVIDER_NAME.CONTAINER_CLASS_ID,SYNC_PROVIDER_NAME.NAME}, null, null, null);
+			if(cursor.getCount()==0){
+				Bundle result = new Bundle();
+				result.putBoolean("containerlist_result", true);
+				publishProgress(result);
+				cursor.close();
+				return;
+			}
+			String data[] = new String[cursor.getCount()+1];
+			data[0]=mContext.getString(R.string.quo_edit_nocontainer);//TODO string mContext.getString(R.string.gen_empty_selection);
+			int index=1,selectIndex=0;
+			while(cursor.moveToNext()){
+				if(selectId==cursor.getInt(0)){
+					selectIndex=index;
+				}
+				data[index++] = cursor.getString(1);
+			}
+			cursor.close();
+			mContainerAdapter = new ArrayAdapter<String>(mContext, 
+					mSpinnerLayout, data);
+			mContainerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			Bundle result = new Bundle();
+			result.putBoolean("containerlist_result", true);
+			result.putInt("selectIndex",selectIndex);
+			publishProgress(result);
+		}
+		
+		private void setTotalAttr(double volume,double weight,double price){
+			Log.e("setTotalAttr","set total in prepare data:volume:"+volume+",weight:"+weight+",tPrice:"+price);
+			tVolume = volume;
+			tWeight = weight;
+			tPrice = price;
+		}
+		
+		
+		
+		protected void onProgressUpdate(Bundle... values) {
+			if(values[0].getBoolean("containerlist_result",false)){
+				refreshContainerData(mContainerAdapter,values[0].getInt("selectIndex"));
+			}
+		}
+		
+		protected void onPostExecute(Bundle result) {
+			refreshListView(mAdapterData);
+			mProductAdjustView.initTotalAttr(tVolume,tWeight,tPrice);
+//			if(result.getBoolean("result",false)){
+//				Log.e("init quoteView total","init by prepare data:tVolume:"+tVolume+",tWeight:"+tWeight+",tPrice:"+tPrice);
+//				
+//			}else{
+//				//TODO
+//			}
+		}
+    }
+	
+	//>----------------
+	@Override
+	public void onBackPressed() {
+		if(!mKeyBoard.isClosed()){
+			mKeyBoard.close();
+			return;
+		}
+		super.onBackPressed();
+	}
+	
+	//>-------call by others------
+	public double getTotalPrice(){
+		return mProductAdjustView.getTotalPrice();
+	}
+	
+	public double getTotalVolume(){
+		return mProductAdjustView.getTotalVolume();
+	}
+	
+	public double getTotalWeight(){
+		return mProductAdjustView.getTotalWeight();
+	}
+
+	public int getProductCount() {
+		if(mListView.getAdapter() instanceof SimpleAdapter){
+			return mListView.getAdapter().getCount();
+		}
+		return 0;
+	}
+	
+
+	public void saveToDB(SQLiteDatabase database){
+		ContentValues values=new ContentValues();
+		if( mListView.getAdapter() instanceof SimpleAdapter){
+			Log.e(TAG,"save staret");
+			SimpleAdapter adapter = (SimpleAdapter) mListView.getAdapter();
+			int count;
+			if((count=adapter.getCount())==0){
+				return;
+			}
+			Map<String, Object> item;
+			String selection=PROVIDER_NAME.QUOTE_ID+"="+mQuoteID+" and "+PROVIDER_NAME.PRODUCT_ID+"=?";
+			for(int index=0,qty,productId;index<count;index++){
+				item=(Map<String, Object>) adapter.getItem(index);
+				if((qty=item.get("qty") instanceof Integer?(Integer)item.get("qty"):Integer.valueOf((String)item.get("qty")))!=0){
+					values.put(NAME.QTY, qty);
+//					Log.e("list view",(String)item.get(NAME.PRICE));
+//					values.put(NAME.PRICE, Double.valueOf(((String)item.get(NAME.PRICE)).trim())/mCurrencyNote.exchangeRateTobase);
+					database.update(NAME.TABLE_QUOTE_PRODUCT, values, selection,
+							new String[]{String.valueOf(item.get(NAME.PRODUCT_ID))});
+				} else{
+					database.delete(NAME.TABLE_QUOTE_PRODUCT, selection, new String[]{String.valueOf(item.get(NAME.PRODUCT_ID))});
+				}
+			}
+			values.clear();
+			
+		}
+//		else {
+//			values.put(NAME.VOLUME, 0);
+//			values.put(NAME.WEIGHT, 0);
+//		}
+
+		if(mContainer.getSelectedItemPosition()-1<0){
+			values.put(PROVIDER_NAME.CONTAINER_CLASS_ID, -1);
+		}else{
+			Cursor cursor=getContentResolver().query(SYNC_PROVIDER_NAME.CONTAINER_CONTENT_URI,
+					new String[]{SYNC_PROVIDER_NAME.CONTAINER_CLASS_ID},null,null,null);
+			if(cursor.moveToPosition(mContainer.getSelectedItemPosition()-1)){
+				values.put(PROVIDER_NAME.CONTAINER_CLASS_ID, cursor.getInt(0));
+			}
+			cursor.close();
+		}
+		values.put(NAME.VOLUME, mProductAdjustView.getTotalVolume());
+		values.put(NAME.WEIGHT, mProductAdjustView.getTotalWeight());
+		//Log.e("save in product view","stact volume:"+mTotalVolume+",weight:"+maxTotalWeight);
+		database.update(NAME.TABLE_QUOTES, values,
+				PROVIDER_NAME.QUOTE_ID+"="+mQuoteID, null);
+	}
+	
+	
+	public boolean addPostParams(List<NameValuePair> responseParams){
+		if(mListView==null||!(mListView.getAdapter() instanceof SimpleAdapter)){
+			return false;
+		}
+		//prepare submit entity
+		StringBuffer products = new StringBuffer();
+		SimpleAdapter adapter=(SimpleAdapter) mListView.getAdapter();
+		HashMap<String, Object> item;
+		for (int i = 0,qty=0,max=adapter.getCount(); i<max; i++) {
+			item=(HashMap<String, Object>) adapter.getItem(i);
+			if((qty=item.get("qty") instanceof Integer?(Integer)item.get("qty"):Integer.valueOf((String)item.get("qty")))!=0){
+				products.append(item.get(NAME.PRODUCT_ID) + ":" + qty);
+				if (i != max - 1)
+					products.append(";");
+			}
+		}
+		Log.e(TAG+" product",products.toString());
+		responseParams.add(new BasicNameValuePair("product_info", products.toString()));
+		if(mContainer.getSelectedItemPosition()==0){
+			return true;
+		}
+		Cursor cursor = getContentResolver().query(SYNC_PROVIDER_NAME.CONTAINER_CONTENT_URI,
+				new String[]{SYNC_PROVIDER_NAME.CONTAINER_CLASS_ID}, null, null, null);
+		
+		if(cursor.moveToPosition(mContainer.getSelectedItemPosition()-1)){
+			responseParams.add(new BasicNameValuePair("container_id", String.valueOf(cursor.getInt(0))));
+		}
+		cursor.close();
+		return true;
+	}
+}

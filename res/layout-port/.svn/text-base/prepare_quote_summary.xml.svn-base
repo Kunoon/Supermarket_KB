@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/prepare_quote_summary"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical" android:gravity="center_vertical"
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<ScrollView android:scrollbars="vertical"
+		 android:layout_marginTop="5sp"
+		android:layout_width="fill_parent" android:layout_weight="1"
+		android:layout_height="0sp">
+		<LinearLayout android:orientation="vertical"
+			android:layout_width="fill_parent"
+			android:layout_marginLeft="5sp" android:layout_marginRight="10sp"
+			android:layout_height="wrap_content" android:layout_weight="1">
+			<LinearLayout android:layout_marginBottom="5sp"
+				android:layout_width="fill_parent" android:layout_height="wrap_content">
+				<LinearLayout android:focusableInTouchMode="true"
+					android:layout_width="0sp" android:layout_height="0sp"></LinearLayout>
+				<TextView android:layout_gravity="center_vertical"
+					android:layout_width="80sp" android:textColor="@color/key_word_color"
+					android:textSize="15sp" android:layout_marginLeft="5sp"
+					android:gravity="center_vertical" android:text="@string/e_description"
+					android:layout_height="wrap_content"></TextView>
+				<EditText android:layout_weight="1" android:layout_width="fill_parent"
+					android:background="@drawable/edittext" android:minHeight="40sp"
+					android:textSize="@dimen/text_word" android:singleLine="true"
+					android:id="@+id/description" android:layout_height="wrap_content">
+					<requestFocus></requestFocus>
+				</EditText>
+			</LinearLayout>
+			<LinearLayout android:layout_marginBottom="5sp"
+				android:layout_width="fill_parent" android:layout_height="wrap_content">
+				<TextView android:layout_width="80sp" android:textColor="@color/key_word_color"
+					android:textSize="15sp" android:layout_marginLeft="5sp"
+					android:gravity="center_vertical" android:text="@string/e_billing_address"
+					android:layout_height="match_parent"></TextView>
+				<Spinner android:layout_weight="1" android:layout_width="fill_parent"
+					android:id="@+id/billing_address" android:layout_height="wrap_content"
+					android:background="@drawable/spinner_style"></Spinner>
+			</LinearLayout>
+			<LinearLayout android:layout_marginBottom="5sp"
+				android:layout_width="fill_parent" android:layout_height="wrap_content">
+				<TextView android:layout_width="80sp" android:textColor="@color/key_word_color"
+					android:textSize="15sp" android:layout_marginLeft="5sp"
+					android:gravity="center_vertical" android:text="@string/e_shipping_address"
+					android:layout_height="match_parent"></TextView>
+				<Spinner android:layout_weight="1" android:layout_width="fill_parent"
+					android:id="@+id/shipping_address" android:layout_height="wrap_content"
+					android:background="@drawable/spinner_style"></Spinner>
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<TextView android:layout_gravity="center_vertical"
+					android:layout_width="80sp" android:textColor="@color/key_word_color"
+					android:textSize="15sp" android:layout_marginLeft="5sp"
+					android:gravity="center_vertical" android:layout_height="match_parent"
+					android:text="@string/quo_payterm"></TextView>
+				<Spinner android:layout_weight="1" android:layout_width="fill_parent"
+					android:id="@+id/payterm" android:layout_height="wrap_content"
+					android:background="@drawable/spinner_style" android:clickable="false"></Spinner>
+			</LinearLayout>
+			<LinearLayout android:layout_marginBottom="5sp"
+				android:layout_width="fill_parent" android:layout_height="wrap_content">
+				<!--
+					<TextView android:layout_width="wrap_content"
+					android:textColor="@color/text_color"
+					android:textSize="@dimen/text_word" android:visibility="gone"
+					android:gravity="center" android:text="@string/e_payment_discount"
+					android:layout_height="wrap_content"></TextView>
+				-->
+				<View android:visibility="invisible" android:layout_width="80sp"
+					android:layout_marginLeft="5sp" android:layout_height="match_parent"></View>
+				<TextView android:layout_width="wrap_content"
+					android:visibility="gone"
+					android:textColor="@color/text_color" android:textSize="@dimen/text_word"
+					android:layout_marginLeft="5sp" android:id="@+id/payterm_desc"
+					android:layout_height="wrap_content"></TextView>
+			</LinearLayout>
+			<LinearLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<TextView android:layout_gravity="center_vertical"
+					android:layout_width="80sp" android:textColor="@color/key_word_color"
+					android:textSize="15sp" android:layout_marginLeft="5sp"
+					android:gravity="center_vertical" android:text="@string/e_payment"
+					android:layout_height="match_parent"></TextView>
+				<Spinner android:layout_weight="1" android:layout_width="fill_parent"
+					android:id="@+id/payment" android:layout_height="wrap_content"
+					android:background="@drawable/spinner_style" android:clickable="false"></Spinner>
+			</LinearLayout>
+			<LinearLayout android:layout_marginBottom="5sp"
+				android:layout_width="fill_parent" android:layout_height="wrap_content">
+				<!--
+					<TextView android:layout_width="wrap_content"
+					android:textColor="@color/text_color"
+					android:textSize="@dimen/text_word" android:visibility="gone"
+					android:gravity="center" android:text="@string/e_payment_discount"
+					android:layout_height="wrap_content"></TextView>
+				-->
+				<View android:visibility="invisible" android:layout_width="80sp"
+					android:layout_marginLeft="5sp" android:layout_height="0sp"></View>
+				<TextView android:layout_width="wrap_content"
+					android:visibility="gone" android:textColor="@color/text_color"
+					android:textSize="@dimen/text_word" android:layout_marginLeft="5sp"
+					android:id="@+id/payment_desc" android:layout_height="wrap_content"></TextView>
+			</LinearLayout>
+		</LinearLayout>
+	</ScrollView>
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_marginLeft="5sp"
+		android:layout_marginRight="5sp" android:orientation="vertical"
+		android:layout_gravity="center">
+		<LinearLayout android:layout_width="fill_parent"
+			android:layout_height="25sp" android:orientation="horizontal"
+			android:weightSum="3">
+			<TextView android:layout_width="0sp" android:layout_height="wrap_content"
+				android:text="@string/e_total_price_tab2" android:textSize="15sp"
+				android:textColor="@color/key_word_color" android:layout_weight="1"
+				android:gravity="center" />
+			<TextView android:layout_weight="1" android:layout_width="0sp"
+				android:text="@string/e_discount_price" android:textSize="15sp"
+				android:layout_marginLeft="10sp" android:layout_height="wrap_content"
+				android:textColor="@color/key_word_color" android:gravity="center"></TextView>
+			<TextView android:layout_weight="1" android:layout_width="0sp"
+				android:text="@string/e_present_price" android:textSize="15sp"
+				android:layout_marginLeft="10sp" android:layout_height="wrap_content"
+				android:textColor="@color/key_word_color" android:gravity="center"></TextView>
+		</LinearLayout>
+		<LinearLayout android:weightSum="3" android:orientation="horizontal"
+			android:layout_height="wrap_content" android:layout_width="match_parent"
+			android:id="@+id/linearLayout1">
+			<LinearLayout android:layout_height="25sp"
+				android:layout_width="0sp" android:id="@+id/total"
+				android:layout_weight="1" android:gravity="center">
+				<TextView android:layout_width="wrap_content"
+					android:textSize="@dimen/text_word" android:id="@+id/summary_ltprice_symbol"
+					android:layout_height="wrap_content" android:textColor="@color/text_color"></TextView>
+				<TextView android:layout_width="wrap_content"
+					android:textSize="@dimen/text_word" android:id="@+id/summary_price"
+					android:layout_height="wrap_content" android:gravity="left"
+					android:textColor="@color/text_color"></TextView>
+				<TextView android:layout_width="wrap_content"
+					android:textSize="@dimen/text_word" android:id="@+id/summary_rtprice_symbol"
+					android:layout_height="wrap_content" android:textColor="@color/text_color"></TextView>
+			</LinearLayout>
+			<LinearLayout android:layout_height="25sp"
+				android:layout_width="0sp" android:layout_weight="1"
+				android:gravity="center">
+				<TextView android:layout_width="wrap_content"
+					android:textSize="@dimen/text_word" android:id="@+id/discount_lprice_unit"
+					android:layout_height="wrap_content" android:textColor="@color/text_color"></TextView>
+				<TextView android:layout_width="wrap_content"
+					android:textSize="@dimen/text_word" android:id="@+id/discount_price"
+					android:layout_height="wrap_content" android:gravity="left"
+					android:textColor="@color/text_color"></TextView>
+				<TextView android:layout_width="wrap_content"
+					android:textSize="@dimen/text_word" android:id="@+id/discount_rprice_unit"
+					android:layout_height="wrap_content" android:textColor="@color/text_color"></TextView>
+			</LinearLayout>
+			<LinearLayout android:layout_height="25sp"
+				android:layout_width="0sp" android:layout_weight="1"
+				android:gravity="center">
+				<TextView android:layout_width="wrap_content"
+					android:textSize="@dimen/text_word" android:id="@+id/present_lprice_unit"
+					android:layout_height="wrap_content" android:textColor="@color/text_color"></TextView>
+				<TextView android:layout_width="wrap_content"
+					android:textSize="@dimen/text_word" android:id="@+id/present_price"
+					android:layout_height="wrap_content" android:gravity="left"
+					android:textColor="@color/text_color"></TextView>
+				<TextView android:layout_width="wrap_content"
+					android:textSize="@dimen/text_word" android:id="@+id/present_rprice_unit"
+					android:layout_height="wrap_content" android:textColor="@color/text_color"></TextView>
+			</LinearLayout>
+		</LinearLayout>
+	</LinearLayout>
+	<Button android:id="@+id/submit" android:textSize="@dimen/btn_word"
+		android:layout_width="@dimen/btn_width" android:layout_height="@dimen/btn_height"
+		android:text="@string/e_submit_quote" android:layout_gravity="center"
+		android:layout_marginBottom="5sp" android:background="@drawable/btn_default"
+		android:layout_centerHorizontal="true" android:textColor="@color/btn_color" />
+</LinearLayout>

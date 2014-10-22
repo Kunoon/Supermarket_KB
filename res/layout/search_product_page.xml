@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	android:layout_gravity="center">
+	<LinearLayout 
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:layout_weight="1">
+	    <FrameLayout 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="match_parent" 
+	    	android:id="@+id/frameLayout1" 
+	    	android:layout_weight="2">
+	        <TextView 
+	        	android:layout_marginLeft="@dimen/margin_left"  
+	        	android:textColor="@color/key_word_color" 
+	        	android:layout_height="wrap_content" 
+	        	android:textSize="@dimen/key_word" 
+	        	android:layout_width="wrap_content" 
+	        	android:text="@string/pro_sear_sim_barcode" 
+	        	android:layout_gravity="bottom"/>
+	    </FrameLayout>
+	    <FrameLayout 
+	    	android:layout_marginLeft="@dimen/margin_left" 
+	    	android:layout_marginRight="@dimen/margin_left" 
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="match_parent" 
+	    	android:id="@+id/frameLayout2" 
+	    	android:layout_weight="1">
+	        <EditText 
+	        	android:maxLength="13" 
+	        	android:id="@+id/bar_code" 
+	        	android:textSize="@dimen/text_word" 
+	        	android:numeric="integer" 
+	        	android:layout_height="wrap_content" 
+	        	android:layout_width="fill_parent" 
+	        	android:layout_gravity="center" 
+	        	android:background="@drawable/search_textfiled" 
+	        	android:singleLine="true">
+	            <requestFocus></requestFocus>
+	        </EditText>
+	    </FrameLayout>
+		<LinearLayout 
+			android:layout_marginLeft="@dimen/margin_left" 
+			android:layout_marginRight="@dimen/margin_left"
+			android:layout_height="wrap_content" 
+			android:layout_width="match_parent" 
+			android:layout_weight="4" 
+			android:gravity="center">
+		    <Button 
+		    	android:textSize="@dimen/btn_word" 
+		    	android:layout_width="@dimen/btn_width" 
+		    	android:text="@string/pro_sear_sim_scan" 
+		    	android:layout_height="@dimen/btn_height" 
+		    	android:id="@+id/btn_scan" 
+		    	android:background="@drawable/btn_default" 
+		    	android:textColor="@color/btn_color"/>
+		    <Button 
+		    	android:layout_marginLeft="30sp" 
+		    	android:textSize="@dimen/btn_word" 
+		    	android:layout_width="@dimen/btn_width" 
+		    	android:text="@string/pro_sear_sim_search" 
+		    	android:layout_height="@dimen/btn_height" 
+		    	android:id="@+id/search" 
+		    	android:background="@drawable/btn_default" 
+		    	android:textColor="@color/btn_color"/>
+		</LinearLayout>
+	</LinearLayout>
+	<ImageView 
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="20sp"
+		android:src="@drawable/simple_search_divide"/>
+	<LinearLayout 
+		android:layout_width="match_parent"
+		android:layout_weight="1"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+		<LinearLayout
+			android:id="@+id/view1" 
+			android:layout_weight="2" 
+			android:layout_width="match_parent" 
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:layout_marginLeft="@dimen/margin_left" 
+	    	android:layout_marginRight="@dimen/margin_left" >
+			<TextView 
+	        	android:textSize="@dimen/key_word" 
+	        	android:layout_height="wrap_content" 
+	        	android:textColor="@color/key_word_color" 
+	        	android:text="@string/pro_sear_sim_brand" android:layout_width="258dp"/>
+	        <Spinner 
+	        	android:id="@+id/sp_simple_brand" 
+	        	android:background="@drawable/spinner_style"
+	        	android:layout_height="wrap_content" 
+	        	android:layout_width="match_parent"/>
+		</LinearLayout>
+		<FrameLayout android:layout_weight="1"
+			android:layout_marginRight="@dimen/margin_left"
+			android:layout_marginLeft="@dimen/margin_left" android:gravity="center"
+			android:layout_width="match_parent" android:layout_height="wrap_content">
+			<Button android:id="@+id/brand_search" android:textColor="@color/btn_color"
+				android:text="@string/pro_sear_sim_search" android:layout_width="@dimen/btn_width"
+				android:layout_height="@dimen/btn_height" android:layout_marginLeft="30sp"
+				android:textSize="@dimen/btn_word" android:background="@drawable/btn_default"
+				android:layout_gravity="right"></Button>
+		</FrameLayout>
+	</LinearLayout>
+</LinearLayout>
+

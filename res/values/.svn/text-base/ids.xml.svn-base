@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<item type="id" name="gen_background"/>
+    <!--  -->
+    <item type="id" name="gen_btn_main"/>
+    <item type="id" name="gen_btn_back"/>
+    <item type="id" name="gen_list_btn_left"/>
+    <item type="id" name="gen_list_btn_right"/>
+    <item type="id" name="gen_list_btn_closed"/> 
+     <!--  -->
+    <item type="id" name="lg_et_username"/>
+    <item type="id" name="lg_et_password"/>
+    <item type="id" name="lg_tv_alert"/>
+    <item type="id" name="lg_btn_login"/>
+     <!--  -->
+    <item type="id" name="main_btn_search"/>
+    <item type="id" name="main_btn_favorite"/>
+    <item type="id" name="main_btn_quote"/>
+    <item type="id" name="main_btn_template"/>
+    <item type="id" name="main_btn_order"/>
+    <item type="id" name="main_btn_exit"/>
+     <!--  -->
+    <item type="id" name="pro_codesearch_edt_code"/>
+    <item type="id" name="pro_codesearch_btn_scan"/>
+    <item type="id" name="pro_codesearch_btn_search"/>
+    <item type="id" name="pro_advsearch_et_keywords"/>
+    <item type="id" name="pro_advsearch_sp_kinds"/>
+    <item type="id" name="pro_advsearch_sp_maker"/>
+    <item type="id" name="pro_advsearch_btn_search"/>
+    <item type="id" name="pro_natsearch_ls_proroducts"/>
+     <!--  -->
+    <item type="id" name="pro_det_btn_backList"/>
+     <!--  -->
+    <item type="id" name="pro_det_btn_favorite"/>
+    <item type="id" name="pro_det_et_number"/>
+    <item type="id" name="det_btn_quote"/>
+     <!--  -->
+    <item type="id" name="favo_btn_delete"/>
+    <item type="id" name="favo_btn_add"/>
+     <!--  -->
+    <item type="id" name="quo_adj_et_number"/>
+    <item type="id" name="quo_adj_sp_type"/>
+    <item type="id" name="quo_adj_btn_favorite"/>
+    <item type="id" name="quo_adj_btn_search"/>
+    <item type="id" name="quo_sum_et_description"/>
+    <item type="id" name="quo_sum_sp_shipaddress"/>
+    <item type="id" name="quo_sum_sp_payaddress"/>
+    <item type="id" name="quo_sum_sp_payment"/>
+    <item type="id" name="quo_sum_btn_submit"/>
+     <!--  -->
+    <item type="id" name="temp_list_sp_port"/>
+    <item type="id" name="temp_list_sp_area"/>
+    <item type="id" name="temp_list_sp_trademark"/>
+    <item type="id" name="temp_list_btn_update"/>
+    <item type="id" name="temp_det_btn_order"/>
+     <!--  -->
+    <item type="id" name="order_btn_update"/>
+    <item type="id" name="order_btn_confirm"/>
+
+</resources>

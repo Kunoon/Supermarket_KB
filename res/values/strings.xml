@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Authenticator -->
+    <string name="AccountType">com.koobest.account.supermarket</string>
+    <string name="AuthTokenType">com.koobest.account.authtoken</string>
+    <string name="authority_key">authority</string>
+    <string name="authority_customer">com.koobest.sync.customer</string>
+    <string name="authority_currency">com.koobest.sync.currency</string>
+    <string name="authority_constants">com.koobest.sync.constants</string>
+    <string name="authority_orders">com.koobest.sync.orders</string>
+    <string name="authority_price">com.koobest.sync.product.price</string>  
+    <string name="authority_temp_orders">com.koobest.sync.temp_orders</string>    
+    <string name="addaccount_authenting">Authenting!</string>  
+    <string name="default_currencysymbol">$</string>
+    
+	<!-- General Tag -->
+    <string name="gen_btn_ok">ok</string>
+    <string name="gen_btn_cancel">cancel</string>
+    <string name="gen_btn_yes">Yes</string>
+    <string name="gen_btn_no">No</string>
+    <string name="gen_volume_symbol">m3</string>
+    <string name="gen_weight_symbol">kg</string>
+    <string name="gen_btn_main">Main</string>
+    <string name="gen_btn_back">Back</string>
+    <string name="gen_btn_reset">Reset</string>
+    <string name="gen_progress_wait">Please Wait...</string>  
+    <string name="gen_empty_selection">Please select...</string>     
+    <string name="gen_btn_refresh">Refresh</string> 
+    <string name="gen_nounits">Need download constants of units,is download now?</string>
+    <string name="gen_dlg_nocurrency">The currency information is not newest,is download now?</string>
+    <string name="gen_dlg_nocustomer">The customer information is not newest,is download now?</string> 
+    <string name="gen_dlg_nolengthunit">The length unit information is not newest,is download now?</string>
+    <string name="gen_dlg_noweightunit">The weight unit information is not newest,is download now?</string> 
+    <string name="gen_dlg_net_timeout">Net connect time out!</string> 
+    <string name="gen_dlg_price_update_fail">Product price update failure,maybe the price you see is not right.Please update it in PrepareQuote page with click button &lt;font color=\'#ff0000\'&gt;RefreshPrice&lt;/font&gt;!</string>
+    <string name="gen_refresh_success">refresh success</string>
+    <string name="gen_refresh_failure">refresh failure</string> 
+    <string name="gen_loginneed_alert">you have not logined,is logining now?</string>
+    <string name="gen_unknown_host_toast">can\'t connect to the server.</string>
+    <string name="gen_dig_noaccount">Please add your account at first</string>
+    <string name="gen_dig_nocurrency">Can\'t find it in local,is download now?</string>
+    <string name="gen_dig_auth_fail">Check account fail,please select again!</string>
+    
+    <!-- Supermarket Express -->
+    <string name="app_name">Supermarket Express</string>
+    <string name="app_tag">Koobest Account</string>
+    
+    <!-- Login -->
+    <string name="lg_invalidaccount">Invalid account!</string>
+    <string name="lg_connectfail">Net connect failure!</string>
+    <string name="lg_lackname">Please enter your username!</string>
+    <string name="lg_lackpassword">Please enter your password!</string>
+    <string name="lg_username">Username</string>
+    <string name="lg_password">Password</string>
+    <string name="lg_btn_login">Login</string>
+    <string name="lg_btn_back">Back</string>
+    <string name="lg_prompt">Only a koobest account can be activated</string>
+    
+    <!-- Loading -->
+    <string name="load_loading">loading</string>
+    <string name="load_company">koobest</string>
+    <string name="load_statu_customer">Loading customer profile</string>
+    <string name="load_statu_currency">Getting currency</string>
+    <string name="load_statu_payment">Getting payment method</string>
+    <string name="load_statu_pay_term">Getting payment term</string>
+    
+    <!-- Supermarket Main Activity -->
+    <string name="main_tag">Main Menu</string>
+    <string name="main_serachproduct">Search Procduct</string>
+    <string name="main_myfav">My Favorites</string>
+    <string name="main_prepare">Prepare Quote</string>
+    <string name="main_quotes">Quotes and Orders</string>
+    <string name="main_template_quotes">Template Orders</string>
+    <string name="main_exit">Exit</string>
+    <string name="main_menu_item1">Choose Currency</string>
+    
+    <!-- Search product Tab Activity -->
+    <string name="pro_sear_tag">Product Search</string>
+    <string name="pro_sear_sim">Simple Search</string>
+    <string name="pro_sear_adv">Advanced Search</string>
+    <string name="pro_sear_local">Local Search</string>
+    <!-- Search product Simple -->
+    <string name="pro_sear_sim_barcode">Product Barcode</string>
+    <string name="pro_sear_sim_brand">Brand</string>
+    <string name="pro_sear_sim_scan">Scan</string>
+    <string name="pro_sear_sim_search">Search</string>
+    <string name="pro_sear_sim_noproduct">No products are found!</string>
+    <string name="pro_sear_sim_barcodecatchfail">Barcode recognition failed!</string>
+    <string name="pro_sear_sim_wrongbarcode">The barcode is wrong(less than 13)!</string>
+    <string name="pro_sear_sim_nobrand">Please select one brand!</string>
+    <!-- Search Product Advanced -->
+    <string name="pro_sear_adv_keyword">Keyword</string>
+    <string name="pro_sear_adv_category">Category</string>
+    <string name="pro_sear_adv_manu">Manufacturer</string>
+    <string name="pro_sear_adv_brand">Brand</string>
+    <string name="pro_sear_adv_search">Search</string>
+    <string name="pro_sear_adv_nokeyword">Please enter keyword!</string>
+    <string name="pro_sear_adv_noproducts">No related products!</string>
+    <!-- Local Search Product Activity -->
+    <string name="search_product_local_tag">Product List</string>
+    <string name="search_product_local_noproducts">No product in your mobile now!</string>
+    
+    <!-- product Display-->
+    <string name="pro_dis_tag">Product Detail</string>
+    <string name="pro_dis_addtofavor">Add to Favorite</string>
+    <string name="pro_dis_noproduct">Product out of date!</string>
+    <string name="pro_dis_downagain">Is download the product again?</string>
+    <string name="pro_dis_unitdownfail">Download failed!</string>
+    <string name="pro_dis_addtoquoter">Add to Quote</string>
+    <string name="pro_dis_ev_qty_hint">Quantity</string>
+        
+    <!-- Favorites Activity-->
+    <string name="favo_addtoquote">Add to Quote</string>
+    <string name="favo_delete">Delete</string>
+    <string name="favo_noproduct">No product in your favorites now!</string>
+    <string name="favo_tag">My Favorites</string>
+    
+    <!-- Quote Edit -->     
+    <string name="quo_edit_tag_new">Prepare Quote(New)</string>
+    <string name="quo_edit_tag_up">Prepare Quote(Upd)</string>   
+    <string name="quo_edit_detail">Quote Detail</string>
+    <string name="quo_edit_continue">Continue Shopping</string>
+    <string name="quo_edit_refresh">Refresh Price</string>
+    <string name="quo_edit_nocontainer">No container specified</string>
+    <string name="quo_edit_qty">Qty</string>
+    <string name="quo_edit_price">Price</string>
+    <string name="quo_edit_line_price">Line Total</string>
+    <string name="quo_edit_qty_class">QTY</string>
+    <string name="quo_edit_price_class">PRICE</string>
+    <string name="quo_edit_total_price">Total Price</string>
+    <string name="quo_edit_total_volume">Total Volume</string>
+    <string name="quo_edit_total_weight">Total Weight</string>    
+    <string name="quo_edit_menu_showdetail">Show Detail</string>
+    <string name="quo_edit_menu_delete">Delete</string>
+    <string name="quo_edit_menu_deleteall">Delete All</string>
+    <string name="quo_edit_dig_deleteall">Do you really want to delete all product now?</string>    
+    <string name="quo_edit_myfavor">MyFavorites</string>    
+    <string name="quo_edit_noproduct">No product in your quote now!</string>
+    <string name="quo_edit_minqtylimit">This is the lowest quantity this product limit!</string>
+    <string name="quo_edit_container_type">Container Type</string>    
+    <!-- Quote Summary -->    
+    <string name="e_quote_summary">Quote Summary</string>    
+    <string name="quo_nopayment">Please select one payment method!</string>
+    <string name="quo_nopayterm">Please select one payment term!</string>
+    <string name="quo_nodescribe">Please describe for your new quote!</string>
+    <string name="quo_nobilladdr">Please select the bill address!</string>
+    <string name="quo_noshipaddr">Please select the ship address!</string>     
+    <string name="e_tot_noproductsub">Please add some product to your quote at first!</string>
+    <string name="e_dig_submitwrong">There catchs some wrong information.You can go to " +
+		    		"QuotesAndOrders page refresh your orders to comfirm whether you have " +
+		    		"submit it!</string>
+	<string name="e_total_price_tab2">Sub_Total</string>
+    <string name="e_discount_price">Discount</string>
+    <string name="e_present_price">Total</string>
+    <string name="e_description">Description</string>
+    <string name="e_payment_discount">Payment Discount</string>
+    <string name="e_submit_quote">Submit Quote</string>
+    <string name="e_billing_address">Billing Address</string>
+    <string name="e_shipping_address">Shipping Address</string>
+    <string name="e_payment">Payment</string>
+    <string name="quo_payterm">Payment Term</string>
+    <string name="quo_deposit">Deposit:</string>
+    <string name="quo_period">Period:</string>    
+        	    		
+        
+        
+        
+        
+        
+    <string name="b1_dialog_tag">Product List</string>
+    <string name="b1_dialog_prepage">Previous Page</string>
+    <string name="b1_dialog_nextpage">Next Page</string>
+    
+    
+        
+        
+        
+    <!-- Prepare Quote Activity -->
+    <string name="quo_override_alert">There is a quote in you prepare list,are you sure to override it?</string>
+    <string name="e_dig_invalidquote">Invalid quote.Please check it.</string>
+    <string name="e_main">Main</string>
+    <string name="e_get_price">GetPrice</string>
+    
+    
+    
+    <!-- My Quotes and Orders Activity -->
+    <string name="f_tag">My orders</string>
+    <string name="ord_list_tag">My quotes and orders</string>  
+    <string name="ord_list_tab_untreated">For your action</string>
+    <string name="ord_list_tab_history">Order History</string>
+    <string name="ord_list_noord_found">No order be found!</string>
+    <string name="f_refresh">Refresh order list</string>
+    <string name="f_back">Main</string>
+    <string name="f_dig_unknowwrong">Catch some unknow exception</string>
+    <string name="f_dig_connectwrong">Please check your connect!</string>
+    <!-- Quote Confirm Activity -->
+    <string name="quo_det_tag">Quote Detail</string>
+    <string name="g_tag">Order</string>
+    <string name="g_confirm">Confirm Quote</string>
+    <string name="g_update">Update quote</string>
+    <string name="g_back">Back</string>    
+    <string name="g_noorders_tag">No orders in local now, please refresh!</string>  
+    <string name="g_dig_quotenotfind">Can not find the quote,maybe it is out of date!</string> 
+    <string name="g_dig_showfail">Fail to show!</string> 
+    <string name="quo_det_as_temp">As Template To Create Quote</string>
+    <!-- Prewired Container List Activity -->
+    <string name="temp_list_port">Port</string>  
+    <string name="temp_list_zone">Zone</string>  
+    <string name="temp_list_brand">Brand</string>  
+    <string name="temp_list_tag">Template Quote</string>  
+    <string name="temp_list_noproduct">No products are found!</string>
+    <!-- Prewired Container Detail Activity -->
+    <string name="temp_det_tag">Template Quote Detail</string>
+    <string name="i_container_type">Container</string>
+    <string name="i_port">Port</string>
+    <string name="i_zone">Zone</string>
+    <string name="i_brand">Brand</string>    
+    <string name="i_back">Back</string>  
+    <string name="i_order">Order</string> 
+    <string name="i_item_price">Price</string>  
+    <string name="i_item_tprice">Total Price</string>
+    <!-- SharePrefrences -->
+    <string name="config_file_key">config</string>
+    <string name="config_currencyCode_key">currency_code</string>
+    <string name="config_currencyId_key">currency_id</string>
+    <string name="search_list_btn_prev">Prev</string>
+    <string name="search_list_btn_next">Next</string>
+    <!-- Prefrence of Setting -->
+    <string name="set_period_tag">Period of Sync</string>
+    <string name="set_period_currency">Currency sync peroid</string>
+    <string name="set_period_orderlist">Orders sync peroid</string>
+    <string name="set_cache_tag">Cache</string>
+    <string name="set_cache_product">Days of a product in history record</string>
+    <string name="cache_pro_detail">cache_pro_detail</string>
+    <string name="period_currency">period_currency</string>
+    <string name="period_orderlist">period_orderlist</string>
+    <!-- KeyBoard -->
+    <string name="key_board_maxqty">MaxQty</string>
+    <string name="key_board_minqty">MinQty</string>
+    <!-- Default Value -->
+    <string name="default_cache_prod">7</string>
+    <string name="default_period_curr">12</string>
+    <string name="default_period_order">2</string>
+    <!-- exit dialog -->
+    <string name="exit_text1">Are you sure to</string>
+    <string name="exit_text2">Exit</string>
+    <string name="dialog_title_exit_finish">Exit</string>
+    <string name="base_btn_yes">Yes</string>
+    <string name="base_btn_no">No</string>
+</resources>

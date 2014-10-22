@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+	<CheckBox 
+		android:id="@+id/cb_myfavorites"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textColor="@color/text_color"
+		android:textSize="@dimen/list_word"
+		android:singleLine="true"
+		android:button="@drawable/checkbox_btn"
+		android:layout_marginLeft="10sp"
+		android:layout_marginTop="10sp"/>
+</LinearLayout>

@@ -1,0 +1,719 @@
+package com.koobest.m.supermarket.activities;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.util.Locale;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.apache.http.ParseException;
+import org.apache.http.conn.ConnectTimeoutException;
+import org.xml.sax.SAXException;
+
+import com.koobest.m.network.toolkits.ResponseException;
+import com.koobest.m.supermarket.activities.dlg.forupdateneed.DialogFactory;
+import com.koobest.m.supermarket.activities.dlg.forupdateneed.DialogFactory.OnUpdateStatuListener;
+import com.koobest.m.supermarket.activities.productsearch.SearchProduct;
+import com.koobest.m.supermarket.activities.quotehandler.EditQuote;
+import com.koobest.m.supermarket.activities.utilities.BaseActivity;
+import com.koobest.m.supermarket.constant.Constants;
+import com.koobest.m.supermarket.contentprovider.PROVIDER_NAME;
+import com.koobest.m.supermarket.database.NAME;
+import com.koobest.m.supermarket.network.NetworkUtilities;
+import com.koobest.m.supermarket.toolkits.DefaultHandlerFactory;
+import com.koobest.m.supermarket.toolkits.ofcurrency.GetCurrencyInformation;
+import com.koobest.m.toolkits.parsexml.ParseXml;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Resources.NotFoundException;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+public class DisplayProduct extends BaseActivity {
+	private static String TAG="DisplayProduct";
+	public static final String KEY_POROCUT_ID="product_id";
+	private Intent mCatchIntent=null;
+	private static final int SAVETO_DB_COMPLETE_MSG = 3;
+	private static final int NETCONNECT_RESPONSE_MSG =5;
+	private static final int PARSEXMLTO_HTML_COMPLETE_MSG=2;
+	private static final int NEEDDOWN_LENGTH_DIALOG=10;
+	private static final int NEEDDOWN_WEIGHT_DIALOG=11;
+	private static final int NETCONNECT_FIAL_DIALOG = 4;
+	public static final int UNIT_DOWN_SUCCESS_DIG = 6;
+	public static final int UNIT_DOWN_FAIL_DIG = 7;
+	
+	//private static final int LOGIN_ALERT=0;
+	private WebView mWebView;
+	private ProgressBar progressBar;
+	private Handler mHandler;
+	private int mProduct_id;
+    private Button btn_AddToFavor;
+	private Dialog mDialog=null;
+	private boolean isEnableToAdd=false;
+	private Thread downloadThread=null;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setProgress(801);
+		setContentView(R.layout.product_display_page);
+		Log.e(TAG, "start");
+		/**
+		 * catch the bar code or product id from the prefix activity. while we
+		 * should access the local database at the first , while if the database
+		 * is less than,we should catch it from server by service
+		 * */
+		mCatchIntent = getIntent();
+		mProduct_id = mCatchIntent.getIntExtra(KEY_POROCUT_ID, -1);
+		mWebView = (WebView) findViewById(R.id.wv);
+		progressBar=(ProgressBar) findViewById(R.id.progress_display);
+		btn_AddToFavor = (Button)findViewById(R.id.add_to_favorite);
+		mWebView.setWebViewClient(new WebViewClient());
+		mWebView.getSettings().setJavaScriptEnabled(true);
+		mWebView.setWebChromeClient(new WebChromeClient());
+		mWebView.addJavascriptInterface(new JSInteface() , "android");
+		
+		if (mProduct_id != -1) {
+			mHandler = new Handler() {
+				public void handleMessage(Message msg) {
+					switch (msg.what) {
+					case PARSEXMLTO_HTML_COMPLETE_MSG:
+						Log.e(TAG,"loadURLmsg");
+						progressBar.setProgress(2);
+						mWebView.loadUrl("file:///data/data/com.koobest.m.supermarket.activities/files/"
+								+ Constants.PRODUCT_HTML_FILE_DIR);
+						Log.e(TAG,"progressbar on show:"+progressBar.isShown());
+						if(!progressBar.isShown()){
+							isEnableToAdd=true;
+						}
+						break;
+					case SAVETO_DB_COMPLETE_MSG:
+						Log.e(TAG,"reloadURLmsg");
+						btn_AddToFavor.setEnabled(true);
+						progressBar.setProgress(4);
+						isEnableToAdd=true;
+						progressBar.setVisibility(View.INVISIBLE);
+						break;
+					case NETCONNECT_RESPONSE_MSG:
+						showDialog(NETCONNECT_FIAL_DIALOG, msg.getData());
+						break;
+					}
+				}
+			};
+			new DisplayProductTask(mHandler,progressBar).execute(mProduct_id);	
+		}
+		
+		
+
+		/**
+		 * the Button of Add to My favorites on Click Event. use
+		 * SupermarketContentProvider to add the product to our local database
+		 * used to store our favorites
+		 * */
+		btn_AddToFavor.setOnClickListener(
+				new OnClickListener() {
+					public void onClick(View v) {
+						ContentResolver resolver = getContentResolver();
+						ContentValues values = new ContentValues();
+						int wishlist_id;
+						//whether the wishlist of this user is exist.while it is not a new will be create 
+						Cursor cursor = getContentResolver().query(
+								PROVIDER_NAME.WISHLIST_CONTENT_URI,
+								new String[] { PROVIDER_NAME.WISHLIST_ID },
+								PROVIDER_NAME.CUSTOMER_ID + "=" + Constants.getCustomerId() , null, null);
+						if (!cursor.moveToFirst()) {
+							values.put(PROVIDER_NAME.CUSTOMER_ID, Constants.getCustomerId());
+							resolver.insert(PROVIDER_NAME.WISHLIST_CONTENT_URI,
+									values);
+							values.clear();
+							cursor.requery();
+							cursor.moveToFirst();
+							wishlist_id = cursor.getInt(0);
+							cursor.close();
+						} else {
+							//when the wishlist of this user is exist. Sure the product we want to insert exists in this list
+							wishlist_id=cursor.getInt(0);
+							Cursor c = getContentResolver().query(
+									PROVIDER_NAME.WISHILST_PRODUCT_CONTENT_URI,
+									new String[] { PROVIDER_NAME.PRODUCT_ID },
+									PROVIDER_NAME.PRODUCT_ID + "="+mProduct_id+" and " 
+									+ PROVIDER_NAME.WISHLIST_ID+"="+wishlist_id,
+									null, null);
+							cursor.close();
+							if(c.moveToFirst()){
+								c.close();
+								Intent intent = new Intent();
+								intent.setClass(getApplicationContext(),
+										MyFavorites.class);
+								DisplayProduct.this.startActivity(intent);
+//								finish();
+								return;
+							} else {
+								c.close();
+							}							
+						}
+						Log.e("wishlist_id", String.valueOf(wishlist_id));
+						values.put(PROVIDER_NAME.WISHLIST_ID,wishlist_id);
+						values.put(PROVIDER_NAME.PRODUCT_ID,mProduct_id);
+						resolver.insert(PROVIDER_NAME.WISHILST_PRODUCT_CONTENT_URI,values);
+						values.clear();	
+						
+						Intent intent = new Intent();
+						intent.setClass(getApplicationContext(),
+								MyFavorites.class);
+						DisplayProduct.this.startActivity(intent);
+//						finish();
+					}
+				});
+		
+		findViewById(R.id.pro_det_add_to_quo).setOnClickListener(new OnClickListener()
+		{
+			
+			public void onClick(View v)
+			{
+				addToQuote(((EditText)findViewById(R.id.pro_det_qty)).getText().toString().trim());
+			}
+		});
+			
+		/**
+		 * the Button of Back onClick Event. finished this activity and go back
+		 * to the prefix Activity
+		 * */
+		this.findViewById(R.id.gen_btn_back).setOnClickListener(
+				new OnClickListener() {
+
+					public void onClick(View v) {
+//						onBackKeyDown();
+						finish();
+					}
+				});
+        findViewById(R.id.gen_btn_main).setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(), SupermarketMain.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+			}
+		});
+	}
+	
+	@Override
+	protected void onStart() {
+		findViewById(R.id.gen_background).setBackgroundDrawable(SupermarketMain.getBackGround(getApplicationContext()));
+		super.onStart();
+	}
+	
+	public void addToQuote(String qty){
+		Log.i(TAG,"ok");
+		if(!isEnableToAdd){
+			Toast.makeText(getBaseContext(), "please wait for the product down", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		if(qty.length()==0||Integer.valueOf(qty)==0){
+			Toast.makeText(getBaseContext(), "the quantity should not be null!", Toast.LENGTH_SHORT).show();//TODO string
+			return;
+		}
+		
+		Log.i(TAG,qty);
+		ContentValues values = new ContentValues();
+		ContentResolver contentResolver = getBaseContext()
+				.getContentResolver();
+		Cursor cursor = contentResolver.query(
+				PROVIDER_NAME.QUOTE_CONTENT_URI,
+				new String[]{PROVIDER_NAME.QUOTE_ID,PROVIDER_NAME.VOLUME,
+				PROVIDER_NAME.WEIGHT},
+				PROVIDER_NAME.CUSTOMER_ID + "="
+						+ Constants.getCustomerId(), null, PROVIDER_NAME.QUOTE_ID+" DESC");
+		if (cursor.getCount() == 0) {
+			values = new ContentValues();
+			values.put(PROVIDER_NAME.CUSTOMER_ID,
+							Constants.getCustomerId());
+			values.put(PROVIDER_NAME.VOLUME, 0);
+			values.put(PROVIDER_NAME.WEIGHT, 0);
+			values.put(PROVIDER_NAME.BILLING_ADDRESS_ID, -1);
+			values.put(PROVIDER_NAME.SHIPPING_ADDRESS_ID, -1);
+			values.put(PROVIDER_NAME.CONTAINER_CLASS_ID, 1);
+//			values.put(PROVIDER_NAME.PAYMENT_ID, "null");
+			values.put(PROVIDER_NAME.ORDER_ID,-1);
+			Log.e("custom_id",values.getAsString(PROVIDER_NAME.CUSTOMER_ID));
+			//values.put(PROVIDER_NAME.STATUS,"prepare_to_quote");
+			getContentResolver().insert(PROVIDER_NAME.QUOTE_CONTENT_URI,values);
+			values.clear();
+			cursor.requery();
+		}
+		cursor.moveToFirst();
+		int quote_id = cursor.getInt(0);
+        double totalVolume=cursor.getDouble(1),totalWeight=cursor.getDouble(2);
+		cursor.close();
+		
+		//insert or update product to quote
+		
+		int quantity = Integer.valueOf(qty);
+		values.put(PROVIDER_NAME.QTY, quantity);
+		values.put(PROVIDER_NAME.QUOTE_ID,quote_id);
+		values.put(PROVIDER_NAME.PRODUCT_ID,mProduct_id);
+		
+		cursor = contentResolver
+			.query(PROVIDER_NAME.QUOTE_PRODUCT_CONTENT_URI,
+				new String[] { PROVIDER_NAME.QUOTE_PRODUCT_ID,NAME.QTY },
+				PROVIDER_NAME.PRODUCT_ID+ "=" + mProduct_id
+				+ " and " + PROVIDER_NAME.QUOTE_ID + "=" + quote_id,
+				null, null);
+		if (cursor.getCount() == 0) {
+			cursor.close();
+			cursor = contentResolver.query(PROVIDER_NAME.PRODUCT_CONTENT_URI,
+					new String[] { PROVIDER_NAME.MINQTY,PROVIDER_NAME.VOLUME,
+					PROVIDER_NAME.WEIGHT,NAME.PRODUCT_NAME},
+					PROVIDER_NAME.PRODUCT_ID+ "="+ mProduct_id,
+					null, null);
+	        cursor.moveToFirst();
+			totalVolume+=cursor.getDouble(1)*quantity;
+			totalWeight+=cursor.getDouble(2)*quantity;
+			values.put(PROVIDER_NAME.PRODUCT_NAME,cursor.getString(3));
+			cursor.close();
+//			values.put(PROVIDER_NAME.PRICE, GetProductPrice.getPriceInBaseCurrency(getApplicationContext(),mProduct_id,quantity));
+		    getContentResolver().insert(
+		    		PROVIDER_NAME.QUOTE_PRODUCT_CONTENT_URI,values);
+		} else {
+			cursor.moveToFirst();
+			int currentQty=cursor.getInt(1);
+			cursor.close();
+			cursor = contentResolver.query(PROVIDER_NAME.PRODUCT_CONTENT_URI,
+					new String[] { PROVIDER_NAME.MINQTY,PROVIDER_NAME.VOLUME,
+					PROVIDER_NAME.WEIGHT,NAME.PRODUCT_NAME},
+					PROVIDER_NAME.PRODUCT_ID+ "="+ mProduct_id,
+					null, null);
+	        cursor.moveToFirst();
+	        totalVolume+=cursor.getDouble(1)*(quantity-currentQty);
+			totalWeight+=cursor.getDouble(2)*(quantity-currentQty);
+			values.put(PROVIDER_NAME.PRODUCT_NAME,cursor.getString(3));
+			cursor.close();
+			getContentResolver().update(PROVIDER_NAME.QUOTE_PRODUCT_CONTENT_URI, values,
+					PROVIDER_NAME.QUOTE_ID+"="+quote_id+" and "+ PROVIDER_NAME.PRODUCT_ID+"="+mProduct_id, null);								
+		}
+		
+		values.clear();
+		//update quote total params
+		values.put(PROVIDER_NAME.VOLUME, totalVolume);
+		values.put(PROVIDER_NAME.WEIGHT, totalWeight);
+		getContentResolver().update(PROVIDER_NAME.QUOTE_CONTENT_URI, values,
+				PROVIDER_NAME.QUOTE_ID+"="+quote_id, null);
+		values.clear();			
+	    
+		Intent intent = new Intent();
+		intent.setClass(getBaseContext(),
+			EditQuote.class);
+//		intent.putExtra(Constants.CLASS_NAME_KEY, "DisplayProduct");
+//		intent.putExtra(NAME.PRODUCT_ID, mProduct_id);
+		DisplayProduct.this.startActivity(intent);
+//		finish();
+	}
+	
+	private void showProgress(){
+		if(mDialog==null){
+			mDialog=ProgressDialog.show(
+					DisplayProduct.this, null,
+					getString(R.string.gen_progress_wait), true, true);
+		}
+	}
+	
+	private void hideProgress(){
+		if(mDialog!=null&&mDialog.isShowing()){
+			mDialog.dismiss();
+		}
+		mDialog=null;
+	}
+	
+	
+	protected Dialog onCreateDialog(int id, Bundle args) {
+		switch(id){
+		case NETCONNECT_FIAL_DIALOG:
+			if(args!=null){
+				switch(args.getInt(ResponseException.RESPONSECODE_KEY)){
+		        case 400:
+					return new AlertDialog.Builder(this).
+					setMessage(getString(R.string.pro_dis_noproduct)).
+					setPositiveButton(getString(R.string.gen_btn_ok),new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which){
+							Intent intent = new Intent();
+							intent.setClass(getApplicationContext(),
+									SearchProduct.class);
+							DisplayProduct.this.startActivity(intent);
+							dialog.dismiss();
+							finish();
+							
+						}
+					}).create();	
+			    }
+			}break;
+//		case UNIT_DOWN_SUCCESS_DIG:
+//			return  new AlertDialog.Builder(this).
+//			setMessage(getString(R.string.c_dig_downagain)).
+//			setPositiveButton(getString(R.string.gen_btn_ok),new DialogInterface.OnClickListener() {
+//				public void onClick(DialogInterface dialog, int which){
+//					dialog.dismiss();
+//					new DisplayProductTask(mHandler,progressBar).execute(mProduct_id);	
+//				}
+//			}).setNegativeButton(getString(R.string.gen_btn_cancel), new DialogInterface.OnClickListener() {
+//				public void onClick(DialogInterface dialog, int which) {
+//					dialog.dismiss();
+//					finish();
+//				}
+//			}).create();
+		case UNIT_DOWN_FAIL_DIG:
+			return  new AlertDialog.Builder(this).
+			setMessage(getString(R.string.pro_dis_unitdownfail)).
+			setPositiveButton(getString(R.string.gen_btn_ok),new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which){
+					dialog.dismiss();
+					finish();	
+				}
+			}).create();
+		}
+		OnUpdateStatuListener l= new DialogFactory.OnUpdateStatuListener() {
+			public void onStart() {
+				if(Constants.getCustomerId()==-1){
+					return;
+				}
+				showProgress();
+			}
+			public void onFinish(int result) {
+				hideProgress();
+				if(result==Activity.RESULT_OK){
+//					showDialog(UNIT_DOWN_SUCCESS_DIG);
+					new DisplayProductTask(mHandler,progressBar).execute(mProduct_id);
+				}else if(result==Activity.RESULT_CANCELED){
+					showDialog(UNIT_DOWN_FAIL_DIG);
+				}
+			}
+		};
+		switch(id){
+		case NEEDDOWN_LENGTH_DIALOG:
+        	return DialogFactory.createLengthAlertDlg(DisplayProduct.this, l);
+		case NEEDDOWN_WEIGHT_DIALOG:
+        	return DialogFactory.createWeightAlertDlg(DisplayProduct.this, l);
+		}
+		return super.onCreateDialog(id, args);
+	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(resultCode==RESULT_CANCELED){		
+			findViewById(R.id.add_to_favorite).setEnabled(false);
+		}
+	}
+	
+	private class DisplayProductTask extends AsyncTask<Integer, Bundle, Message>{
+
+		private Handler mHandler;
+		private WeakReference<ProgressBar> mProgressBarRef;
+		public DisplayProductTask(Handler handler,ProgressBar bar) {
+			mHandler = handler;
+			bar.setVisibility(View.VISIBLE);
+			mProgressBarRef= new WeakReference<ProgressBar>(bar);
+		}
+		@Override
+		protected Message doInBackground(Integer... product_id) {
+			
+			Cursor cursor = getContentResolver().query(
+					PROVIDER_NAME.PRODUCT_CONTENT_URI,
+					new String[] { PROVIDER_NAME.PRODUCT_ID },
+					PROVIDER_NAME.PRODUCT_ID + "=" + product_id[0]+
+					" and "+PROVIDER_NAME.PRODUCT_XML+" IS NOT NULL", null,
+					null);
+			if (cursor.moveToFirst()) {
+				cursor.close();
+				Bundle progress=new Bundle();
+				progress.putInt("addProgress",2);
+				parseXmltoHtml(getProductStream(product_id[0]));
+				
+			//findViewById(R.id.add_to_favorite).setEnabled(true);
+			//displayProductInWebView(getProductStream(cr.getInt(0)));
+			//update the last access date
+				ContentValues values = new ContentValues();
+				values.put(PROVIDER_NAME.LAST_ACCESS_DATE, System.currentTimeMillis());
+				getContentResolver().update(PROVIDER_NAME.PRODUCT_CONTENT_URI,
+						values, PROVIDER_NAME.PRODUCT_ID+"="+product_id[0] , null);
+				values.clear();
+				
+				progress.putBoolean("needHideProgress",true);
+				publishProgress(progress);
+				Message msg=new Message();
+				msg.what=PARSEXMLTO_HTML_COMPLETE_MSG;
+				return msg;
+			}
+			cursor.close();
+			Bundle progress=new Bundle();
+			progress.putBoolean("needDisplayProgress",true);
+			publishProgress(progress);
+			if(Constants.getIsLoginNeed()){
+				Message msg=new Message();
+				msg.what=NEED_LOGIN_DIG;
+				return msg;
+			}
+			return downloadProduct(product_id[0]);
+		}
+		
+		private Message downloadProduct(int mOrderId){
+			try {
+				byte[] product=null;
+				try{
+					 product= NetworkUtilities.downLoadProduct(String.valueOf(mOrderId));
+				}catch (ResponseException e) {
+					e.printStackTrace();
+                    if(e.getResponseCode()==401){
+                    	//login again to require cooikes
+                    	if(NetworkUtilities.login(DisplayProduct.this, Constants.getUsername(),true)==false){
+                    		return new Message();
+                    	}
+                    	//if relogin successful access server again
+                    	try {
+							product= NetworkUtilities.downLoadProduct(String.valueOf(mOrderId));
+						} catch (ResponseException e1) {
+							Message msg=new Message();
+							msg.what=NETCONNECT_RESPONSE_MSG;
+							Bundle bundle=new Bundle();
+			                bundle.putInt(ResponseException.RESPONSECODE_KEY, e.getResponseCode());
+			                msg.setData(bundle);	
+							e1.printStackTrace();
+			                return msg;		
+						}
+                    }else{
+                    	Message msg=new Message();
+						msg.what=NETCONNECT_RESPONSE_MSG;
+						Bundle bundle=new Bundle();
+		                bundle.putInt(ResponseException.RESPONSECODE_KEY, e.getResponseCode());
+		                msg.setData(bundle);	
+						e.printStackTrace();
+		                return msg;	
+					}
+				}
+				if(product!=null){
+					Bundle progressValue = new Bundle();
+					progressValue.putBoolean("require_html", true);
+					progressValue.putByteArray("data", product);
+					publishProgress(progressValue);
+					return parseBySAX(product);
+				}
+						
+			} catch (IOException e) {
+				e.printStackTrace();
+				if(e instanceof ConnectTimeoutException){
+					mHandler.post(new Runnable() {
+						
+						public void run() {
+							Toast.makeText(getBaseContext(), getString(R.string.gen_dlg_net_timeout), Toast.LENGTH_SHORT).show();
+						}
+					});					
+				}
+			} 
+			return new Message();
+		}
+		
+		private Message parseBySAX(byte[] product){
+			try {
+				ParseXml.handleXmlInSAX(product, DefaultHandlerFactory.createHandler(
+						DefaultHandlerFactory.PARSE_PRODUCT_XML, getBaseContext(), product));
+				Message msg=new Message();
+				msg.what=SAVETO_DB_COMPLETE_MSG;
+				return msg;
+			} catch (ParserConfigurationException e) {
+				e.printStackTrace();
+			} catch (SAXException e) {
+				e.printStackTrace();
+				if(e.getMessage().equalsIgnoreCase("the weight unit need could not be found in local")){
+					Message msg=new Message();
+					msg.what=NEEDDOWN_WEIGHT_DIALOG;
+					return msg;
+				}else if(e.getMessage().equalsIgnoreCase("the length unit need could not be found in local")){
+					Message msg=new Message();
+					msg.what=NEEDDOWN_LENGTH_DIALOG;
+					return msg;
+				}
+//				if(e.getMessage().equalsIgnoreCase("unit transform exception")){
+//					Message msg=new Message();
+//					msg.what=NO_UNITS_DIALOG;
+//					return msg;
+//				}
+			} catch (ParseException e) {
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			//!!!!!!!!!prompt
+			return new Message();
+		}
+		
+		@Override
+		protected void onProgressUpdate(Bundle... values){
+			if(values[0].getBoolean("require_html",false)){
+				new RequireHtmlTask(mHandler).execute(values[0]);
+			}
+			mProgressBarRef.get().setProgress(mProgressBarRef.get().getProgress()+values[0].getInt("addProgress",0));
+			if(values[0].getBoolean("needDisplayProgress",false)){
+				mProgressBarRef.get().setVisibility(View.VISIBLE);
+			} else if(values[0].getBoolean("needHideProgress",false)){
+				mProgressBarRef.get().setVisibility(View.INVISIBLE);
+				btn_AddToFavor.setEnabled(true);
+			}
+			
+		}
+		
+		@Override
+		protected void onPostExecute(Message result) {
+			
+			if(result.what==NEEDDOWN_WEIGHT_DIALOG||result.what==NEEDDOWN_LENGTH_DIALOG){
+				showDialog(result.what);
+				return;
+			}else if(result.what==NEED_LOGIN_DIG){
+				showDialog(NEED_LOGIN_DIG);
+			}
+			mHandler.sendMessage(result);
+		}
+		
+		class RequireHtmlTask extends AsyncTask<Bundle, Integer, Message>{
+            Handler mHandler;
+			public RequireHtmlTask(Handler handler) {
+				mHandler = handler;
+			}
+			@Override
+			protected Message doInBackground(Bundle... arg0) {					
+					return parseXmltoHtml(new ByteArrayInputStream(arg0[0].getByteArray("data")));				
+			}
+			
+			@Override
+			protected void onPostExecute(Message result) {
+				mHandler.sendMessage(result);
+			}
+		}
+		
+		private Message parseXmltoHtml(InputStream is){
+			try {
+				int resourceCode;
+				if(Locale.getDefault().getLanguage().equalsIgnoreCase("zh")){
+					resourceCode=R.raw.zh_product_xsl;
+				} else{
+					resourceCode=R.raw.product_xsl;
+				}
+				Bundle data = GetCurrencyInformation.getRateAndSymbol(getApplicationContext());
+				boolean isLeftSymbol=data.getBoolean(GetCurrencyInformation.IS_LEFT_SYMBOL,true);
+				String currencySymbol=data.getString(GetCurrencyInformation.SYMBOL);
+				double exchangeRateTobase=data.getDouble(GetCurrencyInformation.EXCHANGE_RATE_KEY, 1);
+				data.clear();
+				data.putBoolean("is_left_symbol", isLeftSymbol);
+				data.putString("currency_symbol", currencySymbol!=null?currencySymbol:getString(R.string.default_currencysymbol));
+				data.putDouble("currency_exchange_rate",exchangeRateTobase);
+				ParseXml.turnXmlToHtmlByXSL(is, openFileOutput(
+						Constants.PRODUCT_HTML_FILE_DIR, MODE_WORLD_WRITEABLE), getResources()
+						.openRawResource(resourceCode),data);
+				Message msg=new Message();
+				msg.what=PARSEXMLTO_HTML_COMPLETE_MSG;
+				return msg;
+			} catch (NotFoundException e) {
+				e.printStackTrace();
+			} catch (TransformerException e) {
+				e.printStackTrace();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			return new Message();
+		}
+		
+		private InputStream getProductStream(int product_id){
+			Cursor cursor = getContentResolver()
+			    .query(PROVIDER_NAME.PRODUCT_CONTENT_URI,
+					new String[] { PROVIDER_NAME.PRODUCT_XML },
+					PROVIDER_NAME.PRODUCT_ID + "=" + product_id,
+				 	null, null);
+			
+			if(cursor.moveToFirst()){
+				try {
+					return getContentResolver()
+							.openInputStream(
+									Uri.withAppendedPath(
+											PROVIDER_NAME.PRODUCT_CONTENT_URI,
+											cursor.getString(0)));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}finally{
+					cursor.close();
+				}
+			}else {
+				cursor.close();
+			}
+			return null;
+		}
+	}
+
+	@Override
+	protected void onPause() {
+		if(downloadThread!=null&&!downloadThread.isInterrupted()){
+			downloadThread.interrupt();
+		}
+		super.onPause();
+	}
+	
+    final class JSInteface {    	
+    	public void findOrDownloadImage(final String url,final String filename){
+//    		image_values.put(PROVIDER_NAME.IMAGE, String.valueOf(mProduct_id)
+//					+ img_count + ".png");
+    		Log.e("img","start down");
+    		
+    		downloadThread=new Thread(new Runnable() {
+				
+				public void run() {
+					try {
+						File file = new File(getFilesDir(),filename);
+						if(!file.exists()){
+							byte[] data = NetworkUtilities.downloadImage(url);
+	    					FileOutputStream outputStream = openFileOutput(filename,
+	    							Activity.MODE_WORLD_WRITEABLE);
+	    					outputStream.write(data);
+	    					outputStream.close();
+						}
+    					if(!Thread.interrupted()){
+    						Log.e("img","has down");
+    						mHandler.post(new Runnable() {								
+								public void run() {
+									mWebView.loadUrl("javascript:showImage('"+filename+"');");
+								}
+							});
+    					}
+    				} catch (IOException e) {
+    					e.printStackTrace();
+    				} catch (ResponseException e) {
+    					e.printStackTrace();
+    				}
+				}
+			});
+			downloadThread.start();
+    	}
+    }
+}

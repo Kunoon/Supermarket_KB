@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<category_list>
+    <category>
+    <category_id>51</category_id>
+    <name>Condiments</name>
+  </category>
+    <category>
+    <category_id>52</category_id>
+    <name>Snack Food</name>
+  </category>
+    <category>
+    <category_id>53</category_id>
+    <name>Drinks</name>
+  </category>
+    <category>
+    <category_id>54</category_id>
+    <name>Fast Food</name>
+  </category>
+    <category>
+    <category_id>55</category_id>
+    <name>Pickles</name>
+  </category>
+    <category>
+    <category_id>56</category_id>
+    <name>Food &amp; Cook Oil</name>
+  </category>
+    <category>
+    <category_id>57</category_id>
+    <name>Dry Goods</name>
+  </category>
+    <category>
+    <category_id>58</category_id>
+    <name>Fresh</name>
+  </category>
+    <category>
+    <category_id>59</category_id>
+    <name>Commodity</name>
+  </category>
+  </category_list>

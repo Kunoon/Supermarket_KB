@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/kb_express/!svn/ver/224/trunk/SupermarketExpress/res/xml
+END
+currency_syncadapter.xml
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/res/xml/currency_syncadapter.xml
+END
+constants_syncadapter.xml
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/res/xml/constants_syncadapter.xml
+END
+authenticator.xml
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/kb_express/!svn/ver/224/trunk/SupermarketExpress/res/xml/authenticator.xml
+END
+orders_syncadapter.xml
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/res/xml/orders_syncadapter.xml
+END
+account_preferences.xml
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/res/xml/account_preferences.xml
+END
+setting.xml
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/kb_express/!svn/ver/27/trunk/SupermarketExpress/res/xml/setting.xml
+END
+customer_syncadapter.xml
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/res/xml/customer_syncadapter.xml
+END
+price_syncadapter.xml
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/res/xml/price_syncadapter.xml
+END

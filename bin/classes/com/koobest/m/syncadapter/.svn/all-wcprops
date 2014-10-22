@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/src/com/koobest/m/syncadapter
+END
+CustomerSyncService.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/src/com/koobest/m/syncadapter/CustomerSyncService.java
+END
+CurrencySyncService.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/src/com/koobest/m/syncadapter/CurrencySyncService.java
+END
+ConstantsSyncService.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/src/com/koobest/m/syncadapter/ConstantsSyncService.java
+END
+SyncAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/kb_express/!svn/ver/6/trunk/SupermarketExpress/src/com/koobest/m/syncadapter/SyncAdapter.java
+END
